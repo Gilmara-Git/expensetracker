@@ -3,7 +3,8 @@ import { styles } from './styles';
 
 
 export const ManageExpense = ()=>{
-    return (<View>
+    return (
+    <View style={styles.container}>
         <Text>Manage Expenses</Text>
     </View>)
 };
