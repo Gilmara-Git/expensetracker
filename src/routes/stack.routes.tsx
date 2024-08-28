@@ -20,7 +20,7 @@ export const StackRoutes = ()=>{
     <Stack.Navigator>
         <Stack.Screen name='ExpensesOverview' component={BottomTabRoutes} options={{ 
             headerTitle: 'Overall Expenses', 
-            headerStyle: { backgroundColor: themes.colors.yellow_2},
+            headerStyle: { backgroundColor: themes.colors.yellow_1},
             headerTintColor: themes.colors.purple_1
             }}/>
         <Stack.Screen name='ManageExpense' component={ManageExpense}/>

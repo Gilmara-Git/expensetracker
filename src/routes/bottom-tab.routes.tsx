@@ -23,7 +23,7 @@ export const BottomTabRoutes = () => {
     <Navigator screenOptions={{ 
        headerShown: false,
         tabBarStyle: { 
-            backgroundColor: themes.colors.yellow_2,    
+            backgroundColor: themes.colors.yellow_1,    
         },
         tabBarActiveTintColor: themes.colors.purple_3, 
         }}>
