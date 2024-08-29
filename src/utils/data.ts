@@ -2,6 +2,14 @@
 export const data = [
     {
         id: 'Exp-' + Math.floor(Math.random() * 1000000),
+        description: 'Soccer Ball',
+        amount: 42.50,
+        date: new Date(),
+        category: 'Sports'
+    },
+    
+    {
+        id: 'Exp-' + Math.floor(Math.random() * 1000000),
         description: 'Bread',
         amount: 7.50,
         date: new Date('2024-08-26'),
