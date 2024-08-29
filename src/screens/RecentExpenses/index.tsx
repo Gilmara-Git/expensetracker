@@ -1,6 +1,7 @@
 import { View, FlatList } from 'react-native';
 import { styles } from './styles';
 import { ExpenseItem } from '@components/ExpenseItem';
+import { ExpensesSummary } from '@components/ExpensesSummary';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import themes from '../../theme/themes';
 import { data } from '@utils/data';
@@ -13,17 +14,14 @@ const icon = {
        color: themes.colors.green_1,
    }, 
    size: 16
-
     
 }
-
-data.map((exp)=>{console.log(exp);})
-
 
 
 export const RecentExpenses = ()=>{
     return (
     <View style={styles.container}>
+         <ExpensesSummary periodName='Total' expensesList={data}/>
         <FlatList 
             contentContainerStyle={{ }}
             showsVerticalScrollIndicator={false}
