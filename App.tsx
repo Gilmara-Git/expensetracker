@@ -8,6 +8,7 @@ import {
 
 
 import { Routes } from "./src/routes";
+import { ExpensesCtxProvider } from '@contexts/context';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,7 +27,9 @@ export default function App() {
   return (
     <>
       <StatusBar style="auto" />
-      <Routes />
+      <ExpensesCtxProvider>
+        <Routes />
+      </ExpensesCtxProvider>
     </>
   );
 }

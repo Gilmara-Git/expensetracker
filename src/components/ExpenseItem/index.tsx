@@ -1,7 +1,10 @@
 
-import { View, Text, } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { styles } from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavProps } from '@routes/stack.routes';
+
 
 
 import themes from '../../theme/themes';
@@ -24,6 +27,7 @@ type ExpenseItemProps ={
     date: string;
     iconName?: keyof typeof MaterialCommunityIcons.glyphMap,
     iconSize: number;
+    id: string;
     // iconType: string;
 //     icon: { value: 
 //         { type: IconType.MaterialCommunityIcons, name: keyof typeof MaterialCommunityIcons.glyphMap, color: string} |
@@ -40,12 +44,15 @@ enum Category {
 }
 
 
+export const ExpenseItem =({category, description, amount, date, iconSize, id }:ExpenseItemProps) => {
+  const navigation = useNavigation<StackNavProps>();
 
-
-
-export const ExpenseItem =({category, description, amount, date, iconSize}:ExpenseItemProps) => {
+  const handleManageExpense = ()=>{
+    navigation.navigate('manageExpenses', {id })
+  };
 
   return (
+    <Pressable style={({pressed})=> pressed && styles.pressed} onPress={handleManageExpense}>
     <View style={styles.outerContainer}>
       <View style={styles.container}>
         <LinearGradient
@@ -84,7 +91,7 @@ export const ExpenseItem =({category, description, amount, date, iconSize}:Expen
             <View >
               <View style={styles.itemsContainerBottom}>
                 <Text numberOfLines={1} style={styles.title}>
-               {amount}
+               ${amount}
                 </Text>
                 <Text style={styles.category}>{date}</Text>
               </View>
@@ -93,5 +100,6 @@ export const ExpenseItem =({category, description, amount, date, iconSize}:Expen
         </LinearGradient>
       </View>
     </View>
+    </Pressable>
   );
 };

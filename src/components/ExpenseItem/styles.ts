@@ -5,11 +5,11 @@ export const styles = StyleSheet.create(
     {
         outerContainer:{
             borderRadius:16,
-            marginVertical: 25,
-            elevation: 6,
+            marginVertical: 15,
+            elevation: 4,
             shadowColor: themes.colors.jetBlack,
             shadowOffset: { width: 1, height: 1 },
-            shadowOpacity: .25,
+            shadowOpacity: .3,
             shadowRadius: 2,
         },
         container:{
@@ -68,6 +68,9 @@ export const styles = StyleSheet.create(
             width: 90,
             maxWidth: 90,
           
+        },
+        pressed:{
+            opacity: .75
         }
 
     }

@@ -8,14 +8,14 @@ import { RecentExpenses } from "../screens/RecentExpenses";
 import  themes  from '../theme/themes';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 
-type BottomTabTypes = {
+export type BottomTabTypes = {
     allExpenses: undefined,
     recentExpenses: undefined,
 }
 
 export type BottomNavProps = BottomTabNavigationProp<BottomTabTypes>;
 
-const { Navigator, Screen } = createBottomTabNavigator();
+const { Navigator, Screen } = createBottomTabNavigator<BottomTabTypes>();
 
 
 export const BottomTabRoutes = () => {
@@ -37,7 +37,7 @@ export const BottomTabRoutes = () => {
         
       }}/>
       <Screen name ='allExpenses' component={AllExpenses} 
-      options={ {
+        options={ {
         title: 'All Expenses',
           tabBarLabel: 'All',
           tabBarIcon: ({ color, size })=> (
