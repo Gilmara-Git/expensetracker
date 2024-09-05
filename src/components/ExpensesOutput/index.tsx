@@ -1,8 +1,8 @@
-import { FlatList } from "react-native";
+import { FlatList , View, Text } from "react-native";
 import { ExpenseItem } from "@components/ExpenseItem";
 import { ExpensesList } from "@components/ExpensesSummary";
-import dayjs from "dayjs";
 import { dateFormat } from "@utils/dateFormat";
+import { styles} from './styles';
 
 type ExpensesOutputProps = {
   data: ExpensesList;
@@ -21,8 +21,9 @@ export const ExpensesOutput = ({ data }: ExpensesOutputProps) => {
 // const today = new Date('2024-08-12');
 // console.log(today.getUTCDate());
 
+
   return (
-    <>
+  
       <FlatList
       contentContainerStyle={{paddingBottom: 100}}
         showsVerticalScrollIndicator={false}
@@ -39,7 +40,11 @@ export const ExpensesOutput = ({ data }: ExpensesOutputProps) => {
             id={item.id}
           />
         )}
+        ListEmptyComponent={()=>
+          <View style={styles.listEmpty}>
+          <Text style={styles.fallback}>There are no items to display!</Text>
+          </View>}
       />
-    </>
+    
   );
 };
