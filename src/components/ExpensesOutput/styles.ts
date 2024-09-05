@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import themes  from '../../theme/themes';
 import {Dimensions } from 'react-native';
-const deviceHeight =  Dimensions.get('window').height
+const deviceHeight =  Dimensions.get('window').height;
 
 
 export const styles =  StyleSheet.create({

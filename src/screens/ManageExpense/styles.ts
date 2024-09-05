@@ -2,8 +2,6 @@ import { StyleSheet } from 'react-native';
 import themes from '../../theme/themes';
 import { Dimensions } from 'react-native';
 const windowHeight = Dimensions.get('window').height;
-console.log(windowHeight);
-
 
 export const styles = StyleSheet.create({
     container:{

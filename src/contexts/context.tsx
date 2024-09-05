@@ -147,13 +147,13 @@ export const ExpensesCtxProvider = ({ children }: ExpensesCtxProviderType) => {
 
 
     const updateExpense =(id: ExpIdType, expenseData: Omit<expenseType, 'id'>)=>{
-        console.log(id, 'Id on the update expense')
+      
         dispatch( {type: 'UPDATE', payload: { id: id, data: expenseData }})
     };
 
 
     const deleteExpense =(id: ExpIdType)=>{
-        console.log(id, 'id no context')
+ 
         dispatch( {type: 'DELETE', payload: id})
     };
 

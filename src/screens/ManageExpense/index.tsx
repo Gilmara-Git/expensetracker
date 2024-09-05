@@ -34,7 +34,7 @@ export const ManageExpense = () => {
         {
           description: 'Sneaker',
           amount: 71.00,
-          date: new Date('2024-09-02'),
+          date: new Date('2024-08-31'),
           category: 'Apparel',
 
         }
@@ -73,7 +73,7 @@ export const ManageExpense = () => {
 
         { isEditing && (
                 <Button
-                  onPress={handleDelete.bind(null, expId)}
+                  onPress={handleDelete.bind(this, expId)}
                   icon={
                     <IconButton
                       disabled
