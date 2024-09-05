@@ -45,6 +45,8 @@ enum Category {
 
 
 export const ExpenseItem =({category, description, amount, date, iconSize, id }:ExpenseItemProps) => {
+
+
   const navigation = useNavigation<StackNavProps>();
 
   const handleManageExpense = ()=>{
