@@ -8,7 +8,7 @@ export const styles =  StyleSheet.create({
         alignItems: 'center',
         padding:10,
         marginTop: 10,
-        backgroundColor: themes.colors.purple_3,
+        backgroundColor: themes.colors.purple_1,
         borderRadius: 8,
     
     },

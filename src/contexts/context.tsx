@@ -1,15 +1,18 @@
 import { createContext, ReactNode, useReducer } from "react";
-import  { data } from '@utils/data';
-console.log(data.length)
+
+export type ExpIdType = {
+    id: string
+}
+
 
 type ExpensesCtxProviderType = {
   children: ReactNode;
 };
 
 export type expenseType = {
-    id: string,
+    id: ExpIdType,
     description: string,
-    amount: string, 
+    amount: number, 
     date: Date,
     category: string
 }
@@ -17,15 +20,28 @@ export type expenseType = {
 export const ExpensesCtx = createContext({
   expenses: [],
   addExpense: (
-    expense: expenseType
-  ) => {},
-  deleteExpense: (id: string) => {},
+    expense: Omit<expenseType,'id'>) => {},
+  deleteExpense: (id: ExpIdType) => {},
   updateExpense: (
-    id: string, expense: expenseType
+    id: ExpIdType, expense: Omit<expenseType, 'id'>
   ) => {},
 });
 
 const initialState = [
+    {
+        id: 'Exp-' + Math.floor(Math.random() * 1000000),
+        description: 'Shin guards',
+        amount: 22.38,
+        date: new Date('2024-08-29'),
+        category: 'Sports'
+    },
+    {
+        id: 'Exp-' + Math.floor(Math.random() * 1000000),
+        description: 'Rolling blades',
+        amount: 22.38,
+        date: new Date('2024-08-28'),
+        category: 'Sports'
+    },
   {
       id: 'Exp-' + Math.floor(Math.random() * 1000000),
       description: 'Soccer Ball',
@@ -108,7 +124,7 @@ const expenseReducer = (state: any, action: any)=>{
         const expId = 'Exp-' + Math.floor(Math.random() * 1000000)
         return [{ ...action.payload , id: expId }, ...currentExpenses ]
         case 'UPDATE':
-            const expIndex = state.findIndex((expense:expenseType) => expense.id === action.payload.id);
+            const expIndex = state.findIndex((expense:expenseType) => expense.id === action.payload.id.id);
             const expense = state[expIndex]
             const updatedExpense = {...expense, ...action.payload.data}
             const updateExpenseStateArray = [...state];
@@ -117,7 +133,7 @@ const expenseReducer = (state: any, action: any)=>{
 
         case 'DELETE':
             const expenses = [...state];
-            const filteredExpenses = expenses.filter(exp => exp.id !== action.payload)
+            const filteredExpenses = expenses.filter(exp => exp.id !== action.payload.id);
             return filteredExpenses
         default: return state;
     }
@@ -125,17 +141,19 @@ const expenseReducer = (state: any, action: any)=>{
 export const ExpensesCtxProvider = ({ children }: ExpensesCtxProviderType) => {
     const [expensesState, dispatch] = useReducer(expenseReducer, initialState);
 
-    const addExpense =(expenseData: expenseType)=>{
+    const addExpense =(expenseData: Omit<expenseType, 'id'>)=>{
         dispatch( {type: 'ADD', payload: expenseData})
     };
 
 
-    const updateExpense =(id: string, expenseData: expenseType)=>{
+    const updateExpense =(id: ExpIdType, expenseData: Omit<expenseType, 'id'>)=>{
+        console.log(id, 'Id on the update expense')
         dispatch( {type: 'UPDATE', payload: { id: id, data: expenseData }})
     };
 
 
-    const deleteExpense =(id: string)=>{
+    const deleteExpense =(id: ExpIdType)=>{
+        console.log(id, 'id no context')
         dispatch( {type: 'DELETE', payload: id})
     };
 

@@ -3,29 +3,30 @@ import { Pressable, View , PressableProps} from 'react-native';
 import { styles } from './styles';
 import { StackNavProps } from '@routes/stack.routes';
 import { useNavigation } from '@react-navigation/native';
+import themes from '../../theme/themes'
 
 
-type IconButtonProps = PressableProps &{
+type IconButtonProps = PressableProps & {
     iconName: keyof typeof Ionicons.glyphMap,
     size: number,
     color: string | any,
-
+  
 }
 
-export const IconButton = ({iconName, size, color , ...rest }:IconButtonProps) => {
-
-  
+export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) => {
 
     const navigation = useNavigation<StackNavProps>();
     const handleAddExpenseHandler = ()=>{
+        console.log('I was clicked')
         navigation.navigate('manageExpenses', { id: 'addExpense'}); 
     }
 
+   
 
     return (
         <Pressable  style={({pressed})=> pressed && styles.pressed} onPress={handleAddExpenseHandler} {...rest}>
             <View style={styles.container}>
-            <Ionicons name={iconName} size={size} color={color}/>
+                <Ionicons name={iconName} color={color} size={size}/>
             </View>
         </Pressable>
     )

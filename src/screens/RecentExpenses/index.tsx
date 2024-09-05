@@ -19,7 +19,7 @@ export const RecentExpenses = () => {
     const today = new Date();
     const sevenDaysAgo = getRecentPastDays(today, 7);
     
-    return expense.date >= sevenDaysAgo;
+    return (expense.date >= sevenDaysAgo) && (expense.date <= today);
   })
   
 
