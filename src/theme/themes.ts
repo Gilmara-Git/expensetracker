@@ -10,7 +10,7 @@ export default {
         purple_1: '#612DAE',
         purple_2: '#7731D8',
         purple_3: '#8B3DFF',
-        light_purple: '#F4F0FA'
+        light_purple: '#DDCBF7'
         
     },
     fonts:{
