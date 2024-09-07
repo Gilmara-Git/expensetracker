@@ -10,17 +10,6 @@ type ExpensesOutputProps = {
 
 export const ExpensesOutput = ({ data }: ExpensesOutputProps) => {
 
-// data.map(expense => {console.log(dayjs(expense.date).add(1, 'day').format('MM/DD/YY'))})
-// console.log(dayjs('2018-05-05').locale('en-us').format('MM/DD/YY'))
-
-// const d = new Date('2024-8-26')
-// console.log(dayjs(d))
-
-
-// console.log(dayjs('2024-08-12').format('MM/DD/YY'))
-// const today = new Date('2024-08-12');
-// console.log(today.getUTCDate());
-
 
   return (
   
@@ -35,14 +24,13 @@ export const ExpensesOutput = ({ data }: ExpensesOutputProps) => {
             description={item.description}
             amount={item.amount.toFixed(2)}
             date={dateFormat(item.date)}
-            iconName="shopping"
             iconSize={18}
             id={item.id}
           />
         )}
         ListEmptyComponent={()=>
           <View style={styles.listEmpty}>
-          <Text style={styles.fallback}>There are no items to display!</Text>
+          <Text style={styles.fallback}>There are no expenses yet!</Text>
           </View>}
       />
     

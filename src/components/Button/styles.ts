@@ -9,7 +9,7 @@ export const styles =  StyleSheet.create({
         paddingHorizontal: 12,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: Platform.OS === 'android' ? 6 : 8
+        padding: Platform.OS === 'android' ? 4 : 6
     },
     title:{
         fontFamily: themes.fonts.balsamiq_700,

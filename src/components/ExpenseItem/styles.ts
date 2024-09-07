@@ -35,12 +35,7 @@ export const styles = StyleSheet.create(
 
             
         },
-        iconContainer:{
-            borderRadius: 50,
-            backgroundColor: themes.colors.purple_1,
-            padding: 8,
-            marginRight: 15,
-        },
+       
 
         title:{
             fontFamily: themes.fonts.balsamiq_700,

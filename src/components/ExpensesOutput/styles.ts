@@ -13,7 +13,7 @@ export const styles =  StyleSheet.create({
     fallback:{
         fontFamily: themes.fonts.balsamiq_700,
         fontSize: 24,
-        color: themes.colors.purple_3
+        color: themes.colors.purple_1
     
     }
 });

@@ -10,6 +10,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useExpense } from "@hooks/useContext";
 import { ExpIdType } from "@contexts/context";
 import { LinearGradient } from "expo-linear-gradient";
+import { InputForm } from '@components/InputForm';
 
 export const ManageExpense = () => {
   const expContext = useExpense();
@@ -19,6 +20,7 @@ export const ManageExpense = () => {
   const navigation = useNavigation<StackNavProps>();
 
   const isEditing =  expId.id !== 'addExpense';
+ 
 
   useLayoutEffect(() => {
     //instead of setting headerTitle in the route, set it hear conditionally
@@ -59,52 +61,19 @@ export const ManageExpense = () => {
 
   const handleDelete = (id: ExpIdType) => {
     expContext.deleteExpense(id);
-    // console.log(id, 'sou o id')
     navigation.goBack();
   };
 
   return (
        <LinearGradient  colors={["#f2edf3", "#c199ea"]}
           style={styles.background}>
-      <View style={styles.container}>
-          
-              <Button title="Cancel" onPress={handleConfirm} />
-              <Button title={isEditing ? 'Update' : 'Add'} onPress={handleConfirm} />
+          <View style={styles.form}>
+                  <InputForm  expenseId={expId} isEditing={isEditing}/>
 
-        { isEditing && (
-                <Button
-                  onPress={handleDelete.bind(this, expId)}
-                  icon={
-                    <IconButton
-                      disabled
-                      iconName="trash-outline"
-                      size={20}
-                      color={themes.colors.yellow_1}
-                    />
-                  }
-                />
-          
-        )}
-      </View>
-      
-      <View style={styles.innerContainer}>
-       
-
-       
-     
-        <View >
-          <View>
-            <Text style={styles.category}>{}</Text>
-            <Text>icon</Text>
+    
           </View>
 
-          <View></View>
-          <Text>${}</Text>
-          <Text>{}</Text>
-          <Text>{}</Text>
-        </View>
-   
-      </View>
+      
   
       </LinearGradient>
   );

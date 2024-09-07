@@ -17,7 +17,6 @@ export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) 
 
     const navigation = useNavigation<StackNavProps>();
     const handleAddExpenseHandler = ()=>{
-        console.log('I was clicked')
         navigation.navigate('manageExpenses', { id: 'addExpense'}); 
     }
 
