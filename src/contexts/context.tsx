@@ -10,7 +10,7 @@ type ExpensesCtxProviderType = {
 };
 
 export type expenseType = {
-    id: ExpIdType,
+    id: ExpIdType | string,
     description: string,
     amount: number, 
     date: Date,
