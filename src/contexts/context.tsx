@@ -130,7 +130,6 @@ const expenseReducer = (state: any, action: any)=>{
             const updateExpenseStateArray = [...state];
             updateExpenseStateArray[expIndex] = updatedExpense;
             return updateExpenseStateArray;
-
         case 'DELETE':
             const expenses = [...state];
             const filteredExpenses = expenses.filter(exp => exp.id !== action.payload.id);
@@ -146,8 +145,7 @@ export const ExpensesCtxProvider = ({ children }: ExpensesCtxProviderType) => {
     };
 
 
-    const updateExpense =(id: ExpIdType, expenseData: Omit<expenseType, 'id'>)=>{
-      
+    const updateExpense =(id: ExpIdType, expenseData: Omit<expenseType, 'id'>)=>{ 
         dispatch( {type: 'UPDATE', payload: { id: id, data: expenseData }})
     };
 

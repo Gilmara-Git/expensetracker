@@ -69,8 +69,6 @@ export const ManageExpense = () => {
           style={styles.background}>
           <View style={styles.form}>
                   <InputForm  expenseId={expId} isEditing={isEditing}/>
-
-    
           </View>
 
       
