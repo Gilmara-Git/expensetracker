@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View,  Text } from "react-native";
+import { View } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@components/Button";
 import { styles } from "./styles";
@@ -27,7 +27,8 @@ type FormData = {
 const selectListData = [
   { key: 1, value: "Apparel" },
   { key: 2, value: "Sports" },
-  { key: 3, value: "Groceries" },
+  { key: 3, value: "Groceries" }
+  ,
 ];
 
 type inputFormProps = {
@@ -37,6 +38,7 @@ type inputFormProps = {
 
 export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
   const [selectedCategory, setSelectedCategory] = useState("");
+  
   
   const expContext = useExpense();
   const navigation = useNavigation<StackNavProps>();
@@ -50,7 +52,7 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      amount: isEditing && expToEdit ?  expToEdit.amount.toString() : "",
+      amount: isEditing && expToEdit ?  expToEdit.amount.toFixed(2) : "",
       description: isEditing && expToEdit ?  expToEdit.description : "",
       date: isEditing ? dateFormat(expToEdit.date) : "",
     },
@@ -86,148 +88,162 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
   const submit = ( fields: FormData)=>{
  
     const catIndex = selectListData.findIndex(exp => exp.key === Number(selectedCategory))
-    console.log(catIndex)
-    console.log(selectListData[catIndex].value)
-    fields.category = selectListData[catIndex].value
-    console.log(fields)
+
+    fields.category = selectListData[catIndex].value;
 
     handleConfirm(fields);
 }
 
   return (
     <>
-    <View style={styles.container}>
-      <View style={{ flexDirection:'row',justifyContent: 'center',alignItems: 'center'}}>
-          <IconContainer iconSize={16} category='Sports'/>
-
-      </View>
-      
-      
-      <View style={styles.group}>
-        <View>
-          <Controller
-            control={control}
-            rules={{ required: "Type the amount" }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-              label="Amount"
-              placeholder="76.99"
-              onChangeText={onChange}
-              value={value}
-              onBlur={onBlur}
-              multiline={false}
-              />
-            )}
-            name="amount"
-            />
-          {errors.amount && <Text>Amount is a required field</Text>}
+      <View style={styles.container}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <IconContainer
+            iconSize={16}
+            category={isEditing ? expToEdit?.category : "Empty"}
+          />
         </View>
 
-        <View>
-          <Controller
-            control={control}
-            rules={{ required: "Type the date in the suggested format" }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-              label="Date"
-              placeholder="YYYY-MM-DD"
-              onChangeText={onChange}
-              value={value}
-              onBlur={onBlur}
-              multiline={false}
-              />
-            )}
-            name="date"
+        <View style={styles.group}>
+          <View>
+            <Controller
+              control={control}
+              rules={{ required: "Type the amount" }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  label="Amount"
+                  placeholder="76.99"
+                  onChangeText={onChange}
+                  value={value}
+                  onBlur={onBlur}
+                  multiline={false}
+                  errorMessage={errors.amount?.message}
+                />
+              )}
+              name="amount"
             />
-          {errors.date && <Text>Date is a required field</Text>}
+          </View>
+
+          <View>
+            <Controller
+              control={control}
+              rules={{
+                required: "YYYY-MM-DD",
+                pattern: {
+                  value: /[0-9]{4}-[0-9]{2}-[0-9]{2}/,
+                  message: "YYYY-MM-DD",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  label="Date"
+                  placeholder="YYYY-MM-DD"
+                  onChangeText={onChange}
+                  value={value}
+                  onBlur={onBlur}
+                  multiline={false}
+                  errorMessage={errors.date?.message}
+                />
+              )}
+              name="date"
+            />
+          </View>
         </View>
-      </View>
 
-      <SelectList
-        defaultOption={{ key:2, value: 'Sports'}}
-        setSelected={(value: string) => setSelectedCategory(value)}
-        data={selectListData}
-        // onSelect={handleSelected}
-        placeholder="Select a category"
-        fontFamily={themes.fonts.balsamiq_400}
-        inputStyles={{ color: themes.colors.purple_1, fontSize: 14 }}
-        dropdownTextStyles={{ color: themes.colors.purple_1, fontSize: 14 }}
-        dropdownStyles={{
-          borderWidth: 0,
-          backgroundColor: themes.colors.light_white,
-        }}
-        boxStyles={{
-          borderWidth: 0,
-          backgroundColor: themes.colors.light_white,
-        }}
-        maxHeight={140}
-        arrowicon={
-          <IconButton
-          disabled
-          iconName="arrow-down-sharp"
-          size={18}
-          color={themes.colors.purple_1}
-          />
-        }
-        closeicon={
-          <IconButton
-          disabled
-          iconName="close"
-          size={18}
-          color={themes.colors.purple_1}
-          />
-        }
-        searchicon={
-          <IconButton
-          disabled
-          iconName="search-sharp"
-          size={16}
-          color={themes.colors.purple_1}
-          />
-        }
-        notFoundText="Category not found, Click here to select a category."
-        search={false}
-        
-        />
-
-      <View>
-        <Controller
-          control={control}
-          rules={{ required: "Type the description" }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-            label="Description"
-            placeholder="Pair of shoes"
-            onChangeText={onChange}
-            value={value}
-            onBlur={onBlur}
-            multiline={true}
-            />
-          )}
-          name="description"
-          />
-        {errors.amount && <Text>Amount is a required field</Text>}
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <Button title="Cancel" onPress={handleCancel} />
-        <Button title={isEditing ? "Update" : "Add"} onPress={handleSubmit(submit)} />
-
-        {isEditing && (
-          <Button
-          onPress={handleDelete.bind(this, expenseId)}
-          icon={
+        <SelectList
+          defaultOption={{ key: 2, value: "Sports" }}
+          setSelected={(value: string) => setSelectedCategory(value)}
+          data={selectListData}
+          // onSelect={handleSelected}
+          placeholder="Select a category"
+          fontFamily={themes.fonts.balsamiq_400}
+          inputStyles={{ color: themes.colors.purple_1, fontSize: 14 }}
+          dropdownTextStyles={{ color: themes.colors.purple_1, fontSize: 14 }}
+          dropdownStyles={{
+            borderWidth: 0,
+            backgroundColor: themes.colors.light_white,
+          }}
+          boxStyles={{
+            borderWidth: 0,
+            backgroundColor: themes.colors.light_white,
+          }}
+          maxHeight={140}
+          arrowicon={
             <IconButton
-            disabled
-            iconName="trash-outline"
-            size={20}
-            color={themes.colors.yellow_1}
+              disabled
+              iconName="arrow-down-sharp"
+              size={18}
+              color={themes.colors.purple_1}
             />
           }
+          closeicon={
+            <IconButton
+              disabled
+              iconName="close"
+              size={18}
+              color={themes.colors.purple_1}
+            />
+          }
+          searchicon={
+            <IconButton
+              disabled
+              iconName="search-sharp"
+              size={16}
+              color={themes.colors.purple_1}
+            />
+          }
+          notFoundText="Category not found, Click here to select a category."
+          search={false}
+        />
+
+        <View>
+          <Controller
+            control={control}
+            rules={{ required: "Describe your item." }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Description"
+                placeholder="Pair of shoes"
+                onChangeText={onChange}
+                value={value}
+                onBlur={onBlur}
+                multiline={true}
+                errorMessage={errors.description?.message}
+              />
+            )}
+            name="description"
           />
-        )}
+        
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button title="Cancel" onPress={handleCancel} />
+          <Button
+            title={isEditing ? "Update" : "Add"}
+            onPress={handleSubmit(submit)}
+          />
+
+          {isEditing && (
+            <Button
+              onPress={handleDelete.bind(this, expenseId)}
+              icon={
+                <IconButton
+                  disabled
+                  iconName="trash-outline"
+                  size={20}
+                  color={themes.colors.yellow_1}
+                />
+              }
+            />
+          )}
+        </View>
       </View>
-    </View>
-        </>
+    </>
   );
 };
