@@ -24,6 +24,10 @@ export const IconContainer = ({iconSize, category}: IconContainerProps)=>{
         { category === 'Groceries' && 
             <MaterialIcons  name='local-grocery-store' size={iconSize} color={themes.colors.yellow_1}/>
             }
+
+        { category === 'Empty' && 
+            <MaterialCommunityIcons  name='bullseye' size={iconSize} color={themes.colors.yellow_1}/>
+            }
     </View>
     )
 };
