@@ -17,7 +17,7 @@ import { ExpIdType } from "@contexts/context";
 import { expenseType } from "@contexts/context";
 import { dateFormat } from "@utils/dateFormat";
 
-type FormData = {
+export type FormData = {
   amount: string;
   description: string;
   date: string;
@@ -34,9 +34,12 @@ const selectListData = [
 type inputFormProps = {
   isEditing: boolean;
   expenseId: ExpIdType;
+  onDeleteExp: (id: ExpIdType)=>void;
+  onCancel: ()=> void;
+  onConfirm:(fields: FormData)=> void;
 };
 
-export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
+export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expenseId }: inputFormProps) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   
   
@@ -58,32 +61,6 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
     },
   });
   
-  const handleConfirm = (fields: FormData) => {
-    const expense = {
-      description: fields.description,
-      amount: Number(fields.amount),
-      date: new Date(fields.date),
-      category: fields.category
-    }
-
-
-    if (isEditing) {
-      expContext.updateExpense(expenseId, expense);
-    } else {
-      expContext.addExpense(expense);
-    }
-    navigation.goBack();
-  };
-  
-  const handleCancel = () => {
-    navigation.goBack();
-  };
-  
-  const handleDelete = (id: ExpIdType) => {
-    expContext.deleteExpense(id);
-    navigation.goBack();
-  };
-  
 
   const submit = ( fields: FormData)=>{
  
@@ -91,7 +68,7 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
 
     fields.category = selectListData[catIndex].value;
 
-    handleConfirm(fields);
+    onConfirm(fields);
 }
 
   return (
@@ -223,7 +200,7 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="Cancel" onPress={handleCancel} />
+          <Button title="Cancel" onPress={onCancel} />
           <Button
             title={isEditing ? "Update" : "Add"}
             onPress={handleSubmit(submit)}
@@ -231,7 +208,7 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
 
           {isEditing && (
             <Button
-              onPress={handleDelete.bind(this, expenseId)}
+              onPress={onDeleteExp.bind(this, expenseId)}
               icon={
                 <IconButton
                   disabled

@@ -1,18 +1,17 @@
 import { useLayoutEffect } from "react";
-import { View, Text} from "react-native";
+import { View } from "react-native";
 import { styles } from "./styles";
 import { StackNavProps } from "@routes/stack.routes";
 
-import { IconButton } from "@components/IconButton";
-import { Button } from "@components/Button";
-import themes from "../../theme/themes";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useExpense } from "@hooks/useContext";
 import { ExpIdType } from "@contexts/context";
 import { LinearGradient } from "expo-linear-gradient";
 import { InputForm } from '@components/InputForm';
+import { FormData } from '@components/InputForm';
 
 export const ManageExpense = () => {
+
   const expContext = useExpense();
 
   const route = useRoute();
@@ -29,46 +28,46 @@ export const ManageExpense = () => {
     });
   }, [navigation, isEditing]);
 
-  const handleConfirm = () => {
-    if(isEditing){
-      expContext.updateExpense(
-        expId,
-        {
-          description: 'Sneaker',
-          amount: 71.00,
-          date: new Date('2024-08-31'),
-          category: 'Apparel',
+  const handleConfirm = (fields: FormData) => {
+    const expense = {
+      description: fields.description,
+      amount: Number(fields.amount),
+      date: new Date(fields.date),
+      category: fields.category
+    }
 
-        }
 
-       
-        
-      );
-    }else{
-      expContext.addExpense({
-        description: 'Skate',
-        amount: 79.00,
-        date: new Date('2024-09-03'),
-        category: 'Sports',
-      })
+    if (isEditing) {
+      expContext.updateExpense(expId, expense);
+    } else {
+      expContext.addExpense(expense);
     }
     navigation.goBack();
   };
+
 
   const handleCancel = () => {
     navigation.goBack();
   };
 
-  const handleDelete = (id: ExpIdType) => {
-    expContext.deleteExpense(id);
+  const handleDelete = (expId: ExpIdType) => {
+    expContext.deleteExpense(expId);
     navigation.goBack();
   };
+
+
+
 
   return (
        <LinearGradient  colors={["#f2edf3", "#c199ea"]}
           style={styles.background}>
           <View style={styles.form}>
-                  <InputForm  expenseId={expId} isEditing={isEditing}/>
+                  <InputForm 
+                      onDeleteExp={handleDelete} 
+                      onCancel={handleCancel}
+                      onConfirm={handleConfirm}
+                      expenseId={expId} 
+                      isEditing={isEditing}/>
           </View>
 
       
