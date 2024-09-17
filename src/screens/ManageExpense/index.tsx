@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect , useState} from "react";
 import { View } from "react-native";
 import { styles } from "./styles";
 import { StackNavProps } from "@routes/stack.routes";
@@ -9,10 +9,13 @@ import { ExpIdType } from "@contexts/context";
 import { LinearGradient } from "expo-linear-gradient";
 import { InputForm } from "@components/InputForm";
 import { FormData } from "@components/InputForm";
+import { Loading} from '@components/Loading';
 import { storeExpenseInDB, updateExpenseInDB, deleteExpenseInDB } from "@services/apiDatabase";
 
 
+
 export const ManageExpense = () => {
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
   const expContext = useExpense();
 
   const route = useRoute();
@@ -32,8 +35,10 @@ export const ManageExpense = () => {
     
     if (isEditing) {
       try{
+        setIsSubmitting(true);
         expContext.updateExpense(expId, expense);
         await updateExpenseInDB(expId.id, expense);
+        setIsSubmitting(false);
         
         
       }catch(error){
@@ -44,9 +49,11 @@ export const ManageExpense = () => {
       }
     } else {
       try {
+        setIsSubmitting(true);
         const id = await storeExpenseInDB(expense);
         expContext.addExpense({...expense, id: id});
-        
+        setIsSubmitting(false); //
+
       } catch (error) {
         console.log(error);
       } finally {
@@ -61,9 +68,10 @@ export const ManageExpense = () => {
   
   const handleDelete = async(expId: ExpIdType) => {
     try{
+      setIsSubmitting(true);
       await deleteExpenseInDB(expId.id);
       expContext.deleteExpense(expId);
-      
+      setIsSubmitting(false); 
       
     }catch(error){
       console.log(error)
@@ -83,6 +91,7 @@ export const ManageExpense = () => {
   return (
     <LinearGradient colors={["#f2edf3", "#c199ea"]} style={styles.background}>
       <View style={styles.form}>
+        { isSubmitting ? <Loading/> :
         <InputForm
           onDeleteExp={handleDelete}
           onCancel={handleCancel}
@@ -90,6 +99,9 @@ export const ManageExpense = () => {
           expenseId={expId}
           isEditing={isEditing}
         />
+        
+        
+      }
       </View>
     </LinearGradient>
   );

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect , useState } from 'react';
 import { View } from "react-native";
 import { styles } from "./styles";
 
@@ -10,13 +10,14 @@ import { useExpense } from '@hooks/useContext';
 import  {getRecentPastDays } from '@utils/getLast7days';
 import { expenseType } from '@contexts/context';
 import  { getExpensesFromDB }  from '@services/apiDatabase';
+import { Loading } from '@components/Loading';
 
 
 
 export const RecentExpenses = () => {
+  const [isFetching, setIsFetching] = useState(true);
+
   const expContext = useExpense();
-
-
 
   const recentExpenses =  expContext.expenses.filter((expense: expenseType)=>{ 
     const today = new Date();
@@ -27,10 +28,11 @@ export const RecentExpenses = () => {
 
   
   useEffect(()=>{
-  
     const fetchExpenses = async()=>{
+      setIsFetching(true)
        const expenses = await getExpensesFromDB();  
        expContext.setExpenses(expenses);
+       setIsFetching(false)
 
     }
   
@@ -42,8 +44,12 @@ export const RecentExpenses = () => {
 
   return (
     <View style={styles.container}>
+    { isFetching ? <Loading/> :
+      <>
       <ExpensesSummary periodName="Last 7 Days" expensesList={recentExpenses} />
       <ExpensesOutput data={recentExpenses} />
-    </View>
+      </>
+    }
+      </View>
   );
 };
