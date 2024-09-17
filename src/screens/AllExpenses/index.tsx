@@ -1,15 +1,27 @@
-import { useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { View } from "react-native";
-import { data } from "@utils/data";
+
 import { styles } from "./styles";
 import { ExpensesSummary } from "@components/ExpensesSummary";
 import { ExpensesOutput } from "@components/ExpensesOutput";
 import { useExpense } from '@hooks/useContext';
+import { getExpensesFromDB } from '@services/apiDatabase';
 
 
 export const AllExpenses = () => {
-
   const expContext = useExpense();
+
+useEffect(()=>{
+  console.log('Cheguei no All Expenses')
+  const fetchExpenses = async()=>{
+     const expenses = await getExpensesFromDB();
+     expContext.setExpenses(expenses)
+  }
+
+  fetchExpenses();
+
+},[])
+
   
   return (
     <View style={styles.container}>

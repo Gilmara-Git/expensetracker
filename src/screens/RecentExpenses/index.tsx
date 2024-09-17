@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { View } from "react-native";
 import { styles } from "./styles";
 
@@ -5,9 +6,11 @@ import { ExpensesSummary } from "@components/ExpensesSummary";
 import { ExpensesOutput } from "@components/ExpensesOutput";
 import { useExpense } from '@hooks/useContext';
 
-import { data } from "@utils/data";
+
 import  {getRecentPastDays } from '@utils/getLast7days';
 import { expenseType } from '@contexts/context';
+import  { getExpensesFromDB }  from '@services/apiDatabase';
+
 
 
 export const RecentExpenses = () => {
@@ -21,6 +24,19 @@ export const RecentExpenses = () => {
     
     return (expense.date >= sevenDaysAgo) && (expense.date <= today);
   })
+
+  
+  useEffect(()=>{
+  
+    const fetchExpenses = async()=>{
+       const expenses = await getExpensesFromDB();  
+       expContext.setExpenses(expenses);
+
+    }
+  
+    fetchExpenses();
+  
+  },[])
   
 
 
