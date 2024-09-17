@@ -10,9 +10,7 @@ import themes from "../../theme/themes";
 import { IconContainer } from "@components/IconContainer";
 import { IconButton } from "@components/IconButton";
 import { useExpense } from "@hooks/useContext";
-import { useNavigation } from "@react-navigation/native";
 
-import { StackNavProps } from "@routes/stack.routes";
 import { ExpIdType } from "@contexts/context";
 import { expenseType } from "@contexts/context";
 import { dateFormat } from "@utils/dateFormat";
@@ -44,7 +42,7 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
   
   
   const expContext = useExpense();
-  const navigation = useNavigation<StackNavProps>();
+ 
 
   const expToEdit:any = expContext.expenses.find((exp:expenseType) => (exp.id === expenseId.id));
  
@@ -57,7 +55,7 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
     defaultValues: {
       amount: isEditing && expToEdit ?  expToEdit.amount.toFixed(2) : "",
       description: isEditing && expToEdit ?  expToEdit.description : "",
-      date: isEditing ? dateFormat(expToEdit.date) : "",
+      date: isEditing && expToEdit ? dateFormat(expToEdit.date) : "",
     },
   });
   
@@ -134,7 +132,7 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
         </View>
 
         <SelectList
-          defaultOption={{ key: 2, value: "Sports" }}
+          defaultOption={{ key: 2, value: expToEdit?  expToEdit.category : "" }}
           setSelected={(value: string) => setSelectedCategory(value)}
           data={selectListData}
           // onSelect={handleSelected}
