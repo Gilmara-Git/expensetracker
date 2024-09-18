@@ -2,6 +2,7 @@ import { StyleSheet, Platform } from "react-native";
 import themes from '../../theme/themes';
 
 
+
 export const styles =  StyleSheet.create({
     container: {
         backgroundColor: themes.colors.purple_1,

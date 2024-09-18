@@ -43,9 +43,7 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
   
   const expContext = useExpense();
  
-
   const expToEdit:any = expContext.expenses.find((exp:expenseType) => (exp.id === expenseId.id));
- 
 
   const {
     control,
@@ -63,6 +61,8 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
   const submit = ( fields: FormData)=>{
  
     const catIndex = selectListData.findIndex(exp => exp.key === Number(selectedCategory))
+  
+  
     
     if(catIndex === -1){
       setInvalidCategory(true);
@@ -139,7 +139,7 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
         </View>
 
         <SelectList
-          // defaultOption={{ key: 2, value: expToEdit?  expToEdit.category : "" }}
+          // defaultOption={{ key: isEditing ? selectedCategory: null, value:  isEditing && expToEdit.category && expToEdit.category }}
           setSelected={(value: string) => setSelectedCategory(value)}
           data={selectListData}
           // onSelect={handleSelected}

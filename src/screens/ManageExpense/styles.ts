@@ -41,6 +41,6 @@ export const styles = StyleSheet.create({
         // alignItems: 'center',
         marginTop: 20,
         // paddingHorizontal: 40
-        flex: 1
+        flex:1
     }
 })

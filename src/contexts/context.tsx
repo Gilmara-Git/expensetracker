@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useReducer , useEffect } from "react";
+import { createContext, ReactNode, useReducer  } from "react";
 
 
 export type ExpIdType = {
