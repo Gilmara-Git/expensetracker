@@ -15,24 +15,24 @@ export const storeExpenseInDB = async (expense: Omit<expenseType, 'id'>)=>{
 
 
 export const getExpensesFromDB = async()=>{
-    const response = await realtimeDB.get('/expenses.json');
-    const expenses = [];
-  
-    
-    for(const key in response.data){
-        const ObjExpense = {
-            id: key,
-            amount: response.data[key].amount,
-            description: response.data[key].description,
-            category: response.data[key].category,
-            date: new Date(response.data[key].date)
-        }
-       
-        expenses.push(ObjExpense)
-    }
-    
-    return expenses;
 
+        const response = await realtimeDB.get('/expenses.json');
+        const expenses = [];
+      
+        
+        for(const key in response.data){
+            const ObjExpense = {
+                id: key,
+                amount: response.data[key].amount,
+                description: response.data[key].description,
+                category: response.data[key].category,
+                date: new Date(response.data[key].date)
+            }
+           
+            expenses.push(ObjExpense)
+        }
+        
+        return expenses;
     
 }
 

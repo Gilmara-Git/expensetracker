@@ -11,11 +11,13 @@ import  {getRecentPastDays } from '@utils/getLast7days';
 import { expenseType } from '@contexts/context';
 import  { getExpensesFromDB }  from '@services/apiDatabase';
 import { Loading } from '@components/Loading';
+import { ErrorOverlay } from '@components/ErrorOverlay';
 
 
 
 export const RecentExpenses = () => {
   const [isFetching, setIsFetching] = useState(true);
+  const [isErrorMessage, setIsErrorMessage] = useState('');
 
   const expContext = useExpense();
 
@@ -26,12 +28,21 @@ export const RecentExpenses = () => {
     return (expense.date >= sevenDaysAgo) && (expense.date <= today);
   })
 
+
+  const handleClearErrorMessage = ()=>{
+    setIsErrorMessage('')
+  }
   
   useEffect(()=>{
     const fetchExpenses = async()=>{
-      setIsFetching(true)
-       const expenses = await getExpensesFromDB();  
-       expContext.setExpenses(expenses);
+      setIsFetching(true);
+      try{
+        const expenses = await getExpensesFromDB();  
+        expContext.setExpenses(expenses);
+
+      }catch(error){
+        setIsErrorMessage('An error occurred during fetching expenses.')
+      }
        setIsFetching(false)
 
     }
@@ -40,7 +51,9 @@ export const RecentExpenses = () => {
   
   },[])
   
-
+  if(isErrorMessage && !isFetching){
+    return <ErrorOverlay message={isErrorMessage} onConfirm={handleClearErrorMessage}/>
+  }
 
   return (
     <View style={styles.container}>

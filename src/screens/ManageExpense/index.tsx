@@ -11,11 +11,13 @@ import { InputForm } from "@components/InputForm";
 import { FormData } from "@components/InputForm";
 import { Loading} from '@components/Loading';
 import { storeExpenseInDB, updateExpenseInDB, deleteExpenseInDB } from "@services/apiDatabase";
+import { ErrorOverlay } from "@components/ErrorOverlay";
 
 
 
 export const ManageExpense = () => {
   const [ isSubmitting, setIsSubmitting ] = useState(false);
+  const [ isErrorMessage, setIsErrorMessage ] = useState('');
   const expContext = useExpense();
 
   const route = useRoute();
@@ -34,8 +36,8 @@ export const ManageExpense = () => {
     };
     
     if (isEditing) {
+      setIsSubmitting(true);
       try{
-        setIsSubmitting(true);
         expContext.updateExpense(expId, expense);
         await updateExpenseInDB(expId.id, expense);
         setIsSubmitting(false);
@@ -48,15 +50,16 @@ export const ManageExpense = () => {
         
       }
     } else {
+      setIsSubmitting(true);
       try {
-        setIsSubmitting(true);
         const id = await storeExpenseInDB(expense);
         expContext.addExpense({...expense, id: id});
-        setIsSubmitting(false); //
-
+        
       } catch (error) {
+        setIsErrorMessage('Could not add expense, try again later.')
         console.log(error);
       } finally {
+        setIsSubmitting(false); //
         navigation.goBack();
       }
     }
@@ -67,26 +70,34 @@ export const ManageExpense = () => {
   };
   
   const handleDelete = async(expId: ExpIdType) => {
+    setIsSubmitting(true);
     try{
-      setIsSubmitting(true);
       await deleteExpenseInDB(expId.id);
       expContext.deleteExpense(expId);
-      setIsSubmitting(false); 
-      
-    }catch(error){
-      console.log(error)
-    }finally{
       navigation.goBack();
       
+    }catch(error){
+      setIsErrorMessage('Error deleting expenses.')
+      console.log(error)
     }
+    setIsSubmitting(false); 
     
   };
+
+  const handleClearErrorMessage = ()=>{
+    setIsErrorMessage('');
+  };
+
   useLayoutEffect(() => {
-    //instead of setting headerTitle in the route, set it hear conditionally
+    //instead of setting headerTitle in the route, set it here conditionally
     navigation.setOptions({
       title: isEditing ? "Edit Expense" : "Add Expense",
     });
   }, [navigation, isEditing]);
+
+  if(isErrorMessage && !isSubmitting){
+    return <ErrorOverlay message={isErrorMessage} onConfirm={handleClearErrorMessage}/>
+  }
   
   return (
     <LinearGradient colors={["#f2edf3", "#c199ea"]} style={styles.background}>
@@ -99,7 +110,6 @@ export const ManageExpense = () => {
           expenseId={expId}
           isEditing={isEditing}
         />
-        
         
       }
       </View>
