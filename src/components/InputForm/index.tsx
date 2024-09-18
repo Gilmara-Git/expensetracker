@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@components/Button";
 import { styles } from "./styles";
@@ -39,7 +39,7 @@ type inputFormProps = {
 
 export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expenseId }: inputFormProps) => {
   const [selectedCategory, setSelectedCategory] = useState("");
-  
+  const [ invalidCategory, setInvalidCategory ] = useState(false);
   
   const expContext = useExpense();
  
@@ -63,6 +63,13 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
   const submit = ( fields: FormData)=>{
  
     const catIndex = selectListData.findIndex(exp => exp.key === Number(selectedCategory))
+    
+    if(catIndex === -1){
+      setInvalidCategory(true);
+      return 
+    }else{
+      setInvalidCategory(false)
+    }
 
     fields.category = selectListData[catIndex].value;
 
@@ -132,7 +139,7 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
         </View>
 
         <SelectList
-          defaultOption={{ key: 2, value: expToEdit?  expToEdit.category : "" }}
+          // defaultOption={{ key: 2, value: expToEdit?  expToEdit.category : "" }}
           setSelected={(value: string) => setSelectedCategory(value)}
           data={selectListData}
           // onSelect={handleSelected}
@@ -176,6 +183,14 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
           notFoundText="Category not found, Click here to select a category."
           search={false}
         />
+        { invalidCategory &&
+        <View style={styles.catContainer}>
+          
+        <View style={styles.catInnerContainer}>
+        </View>
+          <Text style={styles.catText}>Pick a category</Text>
+        </View>
+         }
 
         <View>
           <Controller
