@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     fontFamily: themes.fonts.balsamiq_400,
     fontSize: 14,
    
+   
   },
   multiline: {
     minHeight: 100,
@@ -33,12 +34,13 @@ export const styles = StyleSheet.create({
     marginTop: -6
   },
   error:{
-    color:'#f75c5f',
+    color: themes.colors.warn,
     fontFamily: themes.fonts.balsamiq_400,
     textAlign: "center",
   },
   textInputErrorBorder:{
     borderBottomWidth: 1,
-    borderBottomColor: '#f75c5f'
+    borderBottomColor: themes.colors.warn,
+  
   }
 });
