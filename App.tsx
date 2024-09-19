@@ -9,6 +9,9 @@ import {
 
 import { Routes } from "./src/routes";
 import { ExpensesCtxProvider } from '@contexts/context';
+import { SignUp } from "@screens/SignUp";
+import { SignIn } from "@screens/SignIn";
+import { AuthRoutes } from "@routes/auth.routes";
 
 export default function App() {
   const [fontsLoaded] = useFonts({

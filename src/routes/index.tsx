@@ -1,11 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { StackRoutes } from './stack.routes';
+import { AppRoutes } from './app.routes';
+import { AuthRoutes } from './auth.routes';
 
 
 export const Routes = ()=>{
     return (
         <NavigationContainer>
-            <StackRoutes />
+            <AuthRoutes />
         </NavigationContainer>
     )
 };
