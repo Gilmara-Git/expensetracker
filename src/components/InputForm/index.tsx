@@ -112,7 +112,7 @@ export const InputForm = ({
         </View>
 
         <View style={styles.group}>
-          <View>
+          <View style={{width: '40%'}}>
             <Controller
               control={control}
               rules={{ required: "Type the amount" }}
@@ -131,7 +131,7 @@ export const InputForm = ({
             />
           </View>
 
-          <View>
+          <View style={{width: '40%'}}>
             <Controller
               control={control}
               rules={{

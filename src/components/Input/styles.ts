@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     color: themes.colors.purple_1,
     fontFamily: themes.fonts.balsamiq_700,
     fontSize: 20,
-    marginTop: 20
+    marginTop: 10
   },
   input: {
     padding: Platform.OS === 'android' ? 6: 12,
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   nonMultiline: {
-    width: 120,
+    width: '100%',
     textAlign: "center",
   },
   errorMessage:{

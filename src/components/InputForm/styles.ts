@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     },
     group:{
       flexDirection: 'row',
-      gap:24,
+      gap:55,
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 20,
