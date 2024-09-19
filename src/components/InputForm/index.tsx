@@ -25,25 +25,32 @@ export type FormData = {
 const selectListData = [
   { key: 1, value: "Apparel" },
   { key: 2, value: "Sports" },
-  { key: 3, value: "Groceries" }
-  ,
+  { key: 3, value: "Groceries" },
 ];
 
 type inputFormProps = {
   isEditing: boolean;
   expenseId: ExpIdType;
-  onDeleteExp: (id: ExpIdType)=>void;
-  onCancel: ()=> void;
-  onConfirm:(fields: FormData)=> void;
+  onDeleteExp: (id: ExpIdType) => void;
+  onCancel: () => void;
+  onConfirm: (fields: FormData) => void;
 };
 
-export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expenseId }: inputFormProps) => {
+export const InputForm = ({
+  onConfirm,
+  onCancel,
+  onDeleteExp,
+  isEditing,
+  expenseId,
+}: inputFormProps) => {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [ invalidCategory, setInvalidCategory ] = useState(false);
-  
+  const [invalidCategory, setInvalidCategory] = useState(false);
+
   const expContext = useExpense();
- 
-  const expToEdit:any = expContext.expenses.find((exp:expenseType) => (exp.id === expenseId.id));
+
+  const expToEdit: any = expContext.expenses.find(
+    (exp: expenseType) => exp.id === expenseId.id
+  );
 
   const {
     control,
@@ -51,30 +58,42 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      amount: isEditing && expToEdit ?  expToEdit.amount.toFixed(2) : "",
-      description: isEditing && expToEdit ?  expToEdit.description : "",
+      amount: isEditing && expToEdit ? expToEdit.amount.toFixed(2) : "",
+      description: isEditing && expToEdit ? expToEdit.description : "",
       date: isEditing && expToEdit ? dateFormat(expToEdit.date) : "",
     },
   });
-  
 
-  const submit = ( fields: FormData)=>{
- 
-    const catIndex = selectListData.findIndex(exp => exp.key === Number(selectedCategory))
-  
-  
-    
-    if(catIndex === -1){
-      setInvalidCategory(true);
-      return 
-    }else{
-      setInvalidCategory(false)
+  const submit = (fields: FormData) => {
+    let catIndex;
+
+    if (!isEditing) {
+      catIndex = selectListData.findIndex(
+        (exp) => exp.key === Number(selectedCategory)
+      );
+
+      if (catIndex === -1) {
+        setInvalidCategory(true);
+        return;
+      } else {
+        setInvalidCategory(false);
+        fields.category = selectListData[catIndex].value;
+      }
     }
 
-    fields.category = selectListData[catIndex].value;
+    if (isEditing && !selectedCategory) {
+      fields.category = expToEdit.category;
+    }
+
+    if (isEditing && selectedCategory) {
+      catIndex = selectListData.findIndex(
+        (exp) => exp.key === Number(selectedCategory)
+      );
+      fields.category = selectListData[catIndex].value;
+    }
 
     onConfirm(fields);
-}
+  };
 
   return (
     <>
@@ -139,7 +158,10 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
         </View>
 
         <SelectList
-          // defaultOption={{ key: isEditing ? selectedCategory: null, value:  isEditing && expToEdit.category && expToEdit.category }}
+          defaultOption={{
+            key: isEditing ? selectedCategory : null,
+            value: isEditing && expToEdit.category && expToEdit.category,
+          }}
           setSelected={(value: string) => setSelectedCategory(value)}
           data={selectListData}
           // onSelect={handleSelected}
@@ -183,14 +205,12 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
           notFoundText="Category not found, Click here to select a category."
           search={false}
         />
-        { invalidCategory &&
-        <View style={styles.catContainer}>
-          
-        <View style={styles.catInnerContainer}>
-        </View>
-          <Text style={styles.catText}>Pick a category</Text>
-        </View>
-         }
+        {invalidCategory && (
+          <View style={styles.catContainer}>
+            <View style={styles.catInnerContainer}></View>
+            <Text style={styles.catText}>Pick a category</Text>
+          </View>
+        )}
 
         <View>
           <Controller
@@ -209,7 +229,6 @@ export const InputForm = ({ onConfirm, onCancel, onDeleteExp, isEditing, expense
             )}
             name="description"
           />
-        
         </View>
 
         <View style={styles.buttonContainer}>
