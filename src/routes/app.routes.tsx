@@ -6,7 +6,6 @@ import themes from '../theme/themes';
 
 import { IconButton } from '@components/IconButton';
 import { BottomTabTypes } from '@routes/bottom-tab.routes';
-import  {  Ionicons } from '@expo/vector-icons'
 
 
 export type StackNavigatorTypes = {
@@ -21,7 +20,7 @@ export type StackNavProps = NativeStackNavigationProp<StackNavigatorTypes>
 const Stack = createNativeStackNavigator<StackNavigatorTypes>();
 
 
-export const StackRoutes = ()=>{
+export const AppRoutes = ()=>{
     return (
     <Stack.Navigator screenOptions={{
         headerTitleStyle:  { fontFamily: themes.fonts.balsamiq_400, fontSize: 18},
