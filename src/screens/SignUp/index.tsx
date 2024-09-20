@@ -1,27 +1,43 @@
-import { View, Text, Pressable } from "react-native";
+import { View} from "react-native";
 import { styles } from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Controller, useForm } from "react-hook-form";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { SignInSingUpLink } from "@components/SignInSignUpLink";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { AuthNavProps } from "@routes/auth.routes";
+
+import * as yup from "yup";
+import YupPassword from 'yup-password';
+require('yup-password')(yup);
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+
+
+const SignUpSchema = yup.object({
+  // email: yup.string().email('Invalid email'),
+  email: yup.string().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i).required('Enter a valid email'),
+  password: yup.string().password().minLowercase(1).minNumbers(1).minUppercase().required('Min 8 digits with 1 Capital letter, 1 number, 1 character'),
+  confirm_password: yup.string().oneOf([yup.ref('password')], 'Passwords do not match.').required('Confirm password'),
+})
+
+type FormData = yup.InferType<typeof SignUpSchema>
+
 
 export const SignUp = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
+  } = useForm<FormData>({
+    resolver: yupResolver(SignUpSchema),
     },
-  });
+  );
 
-  const handleCreateAccount = () => {};
+  const handleCreateAccount = (fields: FormData) => {
+    console.log(fields.email, 'linha38')
+  };
   const navigation = useNavigation<AuthNavProps>();
 
   const directToSignIn = () => {
@@ -34,7 +50,6 @@ export const SignUp = () => {
         <View>
           <Controller
             control={control}
-            rules={{ required: true }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label="Email"
@@ -44,6 +59,10 @@ export const SignUp = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
+                autoCapitalize='none'
+                selectTextOnFocus
+                autoFocus={true}
+
               />
             )}
             name="email"
@@ -53,7 +72,6 @@ export const SignUp = () => {
         <View>
           <Controller
             control={control}
-            rules={{ required: true }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label="Password"
@@ -63,12 +81,31 @@ export const SignUp = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
+                secureTextEntry
               />
             )}
             name="password"
           />
         </View>
 
+        <View>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Confirm Password"
+                multiline={false}
+                errorMessage={errors.confirm_password?.message}
+                placeholder="Retype your password"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                secureTextEntry
+              />
+            )}
+            name="confirm_password"
+          />
+        </View>
         <View style={styles.button}>
           <Button title="Sign Up" onPress={handleSubmit(handleCreateAccount)} />
         </View>

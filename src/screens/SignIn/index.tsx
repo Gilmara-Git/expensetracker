@@ -53,7 +53,11 @@ export const SignIn = () => {
         <View>
           <Controller
             control={control}
-            rules={{ required: true }}
+            rules={{ required: 'Please enter your e-mail.', 
+              pattern:{
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email entry.'
+            } }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label="Password"
