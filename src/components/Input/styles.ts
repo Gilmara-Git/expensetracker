@@ -42,5 +42,10 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: themes.colors.warn,
   
+  },
+  eye:{
+    position: "absolute",
+    bottom: 20,
+    right: 15
   }
 });

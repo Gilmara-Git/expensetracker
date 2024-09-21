@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { View} from "react-native";
 import { styles } from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,6 +30,8 @@ type FormData = z.infer<typeof SignUpSchema>
 
 
 export const SignUp = () => {
+  const [ showPassword, setShowPassword ] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -47,6 +50,10 @@ export const SignUp = () => {
     navigation.navigate("signIn");
   };
 
+  const handleToggleReviewPassword = ()=>{
+    setShowPassword((preState)=> !preState);
+
+  }
   return (
     <LinearGradient colors={["#f2edf3", "#c199ea"]} style={styles.background}>
       <View style={styles.container}>
@@ -65,6 +72,7 @@ export const SignUp = () => {
                 autoCapitalize='none'
                 selectTextOnFocus
                 autoFocus={true}
+               
 
               />
             )}
@@ -84,7 +92,10 @@ export const SignUp = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                secureTextEntry={true}
+                secureTextEntry={showPassword}
+                passwordField={true}
+                shouldReviewPassword={handleToggleReviewPassword}
+                showPassword={showPassword}
               />
             )}
             name="password"
@@ -103,7 +114,10 @@ export const SignUp = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                secureTextEntry
+                secureTextEntry={showPassword}
+                passwordField={true}
+                shouldReviewPassword={handleToggleReviewPassword}
+                showPassword={showPassword}
               />
             )}
             name="confirm_password"
