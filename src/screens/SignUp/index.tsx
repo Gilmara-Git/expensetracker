@@ -8,21 +8,24 @@ import { SignInSingUpLink } from "@components/SignInSignUpLink";
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavProps } from "@routes/auth.routes";
 
-import * as yup from "yup";
-import YupPassword from 'yup-password';
-require('yup-password')(yup);
-import { yupResolver } from "@hookform/resolvers/yup";
+
+
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from "react-hook-form";
 
 
-const SignUpSchema = yup.object({
-  // email: yup.string().email('Invalid email'),
-  email: yup.string().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i).required('Enter a valid email'),
-  password: yup.string().password().minLowercase(1).minNumbers(1).minUppercase().required('Min 8 digits with 1 Capital letter, 1 number, 1 character'),
-  confirm_password: yup.string().oneOf([yup.ref('password')], 'Passwords do not match.').required('Confirm password'),
-})
+const SignUpSchema = z.object({
 
-type FormData = yup.InferType<typeof SignUpSchema>
+  email: z.string().email(),
+  password: z.string().min(6).max(8),
+  confirm_password: z.string()
+}).refine(data => data.password === data.confirm_password, {
+  message:'Password and Confirm Password must match.',
+  path:['confirm_password']
+});
+
+type FormData = z.infer<typeof SignUpSchema>
 
 
 export const SignUp = () => {
@@ -31,12 +34,12 @@ export const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(SignUpSchema),
+    resolver: zodResolver(SignUpSchema)
     },
   );
 
   const handleCreateAccount = (fields: FormData) => {
-    console.log(fields.email, 'linha38')
+    console.log(fields, 'linha38')
   };
   const navigation = useNavigation<AuthNavProps>();
 
@@ -81,7 +84,7 @@ export const SignUp = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                secureTextEntry
+                secureTextEntry={true}
               />
             )}
             name="password"
