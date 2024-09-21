@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, View , PressableProps} from 'react-native';
 import { styles } from './styles';
-import { StackNavProps } from '@routes/stack.routes';
+import { StackNavProps } from '@routes/app.routes';
 import { useNavigation } from '@react-navigation/native';
 
 
