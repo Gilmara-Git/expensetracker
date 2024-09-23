@@ -28,7 +28,8 @@
     "react-native-screens": "3.31.1",
     "yup": "^1.4.0",
     "yup-password": "^0.4.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@react-native-community/datetimepicker": "8.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
