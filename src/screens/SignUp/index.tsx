@@ -3,6 +3,7 @@ import { View} from "react-native";
 import { styles } from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
 
+
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { Loading  } from "@components/Loading";
@@ -14,6 +15,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from "react-hook-form";
 import { signUpUser} from '@services/authenticateUser'
+
 
 // firebase requires a password min length of 6 characters
 const SignUpSchema = z.object({
@@ -31,7 +33,8 @@ type FormData = z.infer<typeof SignUpSchema>
 export const SignUp = () => {
   const [ showPassword, setShowPassword ] = useState(false);
   const [ isAuthenticating, setIsAuthenticating ] = useState(false)
-console.log(process.env.API_KEY)
+
+
   const {
     control,
     handleSubmit,
