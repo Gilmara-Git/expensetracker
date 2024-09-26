@@ -27,6 +27,7 @@ export const AppRoutes = ()=>{
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: themes.colors.yellow_1},
             headerTintColor: themes.colors.purple_1, 
+            animation: 'fade_from_bottom'
     }}>
         <Stack.Screen name='expensesOverview' component={BottomTabRoutes} options={{ 
             headerTitle: 'Overall Expenses', 
