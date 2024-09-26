@@ -8,11 +8,11 @@ export const styles = StyleSheet.create({
        
     },
     group:{
-      flexDirection: 'row',
-      gap:55,
+      flexDirection: 'column',
+      // gap:55,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 20,
+      marginTop: 10,
     
 
     },
@@ -34,6 +34,19 @@ export const styles = StyleSheet.create({
     },
     catText:{
       textAlign: 'center', color: themes.colors.warn
+    },
+    datePickerIOS:{
+      marginTop: -10,
+      height: 120,
+      
+    },
+    iosButtonContainer:{
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: -2,
+      marginBottom: 20,
+      gap: 20
     }
    
    

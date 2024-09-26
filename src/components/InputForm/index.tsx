@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text , Pressable, Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@components/Button";
 import { styles } from "./styles";
@@ -14,6 +14,8 @@ import { useExpense } from "@hooks/useContext";
 import { ExpIdType } from "@contexts/context";
 import { expenseType } from "@contexts/context";
 import { dateFormat } from "@utils/dateFormat";
+import DateTimePicker , {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+
 
 export type FormData = {
   amount: string;
@@ -43,14 +45,38 @@ export const InputForm = ({
   isEditing,
   expenseId,
 }: inputFormProps) => {
+
   const [selectedCategory, setSelectedCategory] = useState("");
   const [invalidCategory, setInvalidCategory] = useState(false);
-
+  
   const expContext = useExpense();
-
   const expToEdit: any = expContext.expenses.find(
     (exp: expenseType) => exp.id === expenseId.id
   );
+
+
+  const [date, setDate] = useState<Date>(isEditing && expToEdit ? expToEdit.date : new Date());
+  const [showPicker, setShowPicker] = useState(false);
+
+  
+  const toggleDatePicker = ()=>{
+    setShowPicker(prevState => !prevState)
+  };
+  
+  const onDateChange = (event : DateTimePickerEvent, selectedDate: any )=>{
+    // type can be set or dismissed
+    setDate(selectedDate)
+    if(event.type === 'set' && Platform.OS === 'android'){
+      toggleDatePicker();
+      setDate(selectedDate);
+
+    }
+  };
+
+
+  const onIosDateChange = ()=>{
+    toggleDatePicker()
+ }
 
   const {
     control,
@@ -92,6 +118,9 @@ export const InputForm = ({
       fields.category = selectListData[catIndex].value;
     }
 
+    fields.date = date.toDateString();
+   
+
     onConfirm(fields);
   };
 
@@ -112,7 +141,7 @@ export const InputForm = ({
         </View>
 
         <View style={styles.group}>
-          <View style={{width: '40%'}}>
+          <View style={{minWidth: '40%'}}>
             <Controller
               control={control}
               rules={{ required: "Type the amount" }}
@@ -131,8 +160,48 @@ export const InputForm = ({
             />
           </View>
 
-          <View style={{width: '40%'}}>
-            <Controller
+          <View style={{ minWidth: '40%'}}>
+
+            
+            { !showPicker && (
+              
+              <Pressable onPress={toggleDatePicker}>
+                <Input
+                      label="Date"
+                      placeholder="Pick Date"
+                      // onChangeText={onChange}
+                      value={dateFormat(date)}
+                      // onBlur={onBlur}
+                      multiline={false}
+                      errorMessage={errors.date?.message}
+                      editable={false}
+                      onPressIn={toggleDatePicker}
+                      />
+            </Pressable>
+            )}
+
+
+              { showPicker && (
+                <View >
+
+                  <DateTimePicker 
+                    mode='date'
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default' }
+                    value={date}
+                    onChange={onDateChange}
+                    style={styles.datePickerIOS}
+                    accentColor={themes.colors.purple_1}
+                    />
+                    </View>
+              )}
+          
+              { showPicker && Platform.OS === 'ios' && (
+                <View style={styles.iosButtonContainer}>
+                  <Button title='Cancel' onPress={toggleDatePicker}/>
+                  <Button title='Confirm' onPress={onIosDateChange}/>
+                </View>
+              )}
+            {/* <Controller
               control={control}
               rules={{
                 required: "YYYY-MM-DD",
@@ -153,8 +222,9 @@ export const InputForm = ({
                 />
               )}
               name="date"
-            />
-          </View>
+            /> */}
+
+       </View>
         </View>
 
         <SelectList

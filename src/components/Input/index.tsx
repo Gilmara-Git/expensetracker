@@ -41,7 +41,7 @@ export const Input = ({
         />
         {passwordField && (
           <Pressable onPress={shouldReviewPassword}>
-            {showPassword ? (
+            { showPassword ? (
               <Ionicons
                 name="eye-outline"
                 size={20}
