@@ -5,6 +5,10 @@ import {
   BalsamiqSans_700Bold,
   useFonts,
 } from "@expo-google-fonts/balsamiq-sans";
+import {
+  SafeAreaView,
+
+} from 'react-native-safe-area-context';
 
 
 import { Routes } from "./src/routes";
@@ -19,9 +23,12 @@ export default function App() {
 
   if (!fontsLoaded) {
     return (
+      <SafeAreaView>
+
       <View style={styles.indicator}>
         <ActivityIndicator color="#955999" size={20} />
       </View>
+      </SafeAreaView>
     );
   }
 
