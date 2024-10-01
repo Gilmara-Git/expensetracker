@@ -3,8 +3,8 @@ import { View } from "react-native";
 import { styles } from "./styles";
 
 import { Loading} from '@components/Loading';
-import { useExpense } from "@hooks/useContext";
-import { ExpIdType } from "@contexts/context";
+import { useExpense } from '@hooks/useExpensesContext';
+import { ExpIdType } from "@contexts/expensesContext";
 import { FormData } from "@components/InputForm";
 import { InputForm } from "@components/InputForm";
 import { LinearGradient } from "expo-linear-gradient";

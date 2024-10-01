@@ -9,10 +9,10 @@ import { Input } from "@components/Input";
 import themes from "../../theme/themes";
 import { IconContainer } from "@components/IconContainer";
 import { IconButton } from "@components/IconButton";
-import { useExpense } from "@hooks/useContext";
+import { useExpense } from "@hooks/useExpensesContext";
 
-import { ExpIdType } from "@contexts/context";
-import { expenseType } from "@contexts/context";
+import { ExpIdType } from "@contexts/expensesContext";
+import { expenseType } from "@contexts/expensesContext";
 import { dateFormat } from "@utils/dateFormat";
 import DateTimePicker , {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 

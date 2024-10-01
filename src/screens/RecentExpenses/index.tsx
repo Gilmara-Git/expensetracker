@@ -4,11 +4,11 @@ import { styles } from "./styles";
 
 import { ExpensesSummary } from "@components/ExpensesSummary";
 import { ExpensesOutput } from "@components/ExpensesOutput";
-import { useExpense } from '@hooks/useContext';
+import { useExpense } from '@hooks/useExpensesContext';
 
 
 import  {getRecentPastDays } from '@utils/getLast7days';
-import { expenseType } from '@contexts/context';
+import { expenseType } from '@contexts/expensesContext';
 import  { getExpensesFromDB }  from '@services/apiDatabase';
 import { Loading } from '@components/Loading';
 import { ErrorOverlay } from '@components/ErrorOverlay';

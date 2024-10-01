@@ -6,7 +6,7 @@ import { styles } from "./styles";
 import { ExpensesSummary } from "@components/ExpensesSummary";
 import { ExpensesOutput } from "@components/ExpensesOutput";
 import { Loading } from '@components/Loading';
-import { useExpense } from '@hooks/useContext';
+import { useExpense } from '@hooks/useExpensesContext';
 import { getExpensesFromDB } from '@services/apiDatabase';
 import { ErrorOverlay } from '@components/ErrorOverlay';
 

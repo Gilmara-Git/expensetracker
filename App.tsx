@@ -12,7 +12,9 @@ import {
 
 
 import { Routes } from "./src/routes";
-import { ExpensesCtxProvider } from '@contexts/context';
+import { ExpensesCtxProvider } from '@contexts/expensesContext';
+import { AuthContextProvider } from "@contexts/authContext";
+
 
 
 export default function App() {
@@ -35,9 +37,11 @@ export default function App() {
   return (
     <>
       <StatusBar style="auto" />
-      <ExpensesCtxProvider>
-        <Routes />
-      </ExpensesCtxProvider>
+      <AuthContextProvider>
+        <ExpensesCtxProvider>
+          <Routes />
+        </ExpensesCtxProvider>
+      </AuthContextProvider>
     </>
   );
 }
