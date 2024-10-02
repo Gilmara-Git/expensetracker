@@ -14,7 +14,8 @@ import { AuthNavProps } from "@routes/auth.routes";
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from "react-hook-form";
-import { userSignUp} from '@services/authenticateUser'
+// import { userSignUp} from '@services/authenticateUser'
+import { useUserContext } from '@hooks/useUserContext';
 
 
 // firebase requires a password min length of 6 characters
@@ -34,6 +35,7 @@ export const SignUp = () => {
   const [ showPassword, setShowPassword ] = useState(false);
   const [ isAuthenticating, setIsAuthenticating ] = useState(false);
 
+  const { signUp } = useUserContext();
 
   const {
     control,
@@ -48,22 +50,22 @@ export const SignUp = () => {
   const handleCreateAccount = async (fields: FormData) => {
     try{
       setIsAuthenticating(true);
-      await userSignUp(fields.email, fields.password);
+      await signUp(fields.email, fields.password);
      
 
     }catch(error:any){
       if(error.response){
-        console.log(error.response.data, 'linha 56');
-        console.log(error.response.status, 'linha 57');
-        console.log(error.response.headers, 'linha 58');
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.response.data);
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.response.status);
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.response.headers);
 
       }else if(error.request){
-        console.log(error.request, 'linha61')
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.request)
 
       }else{
-        console.log('Error', error.message, 'linha64');
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.message);
       }
-      console.log(error.config, 'linha66');
+      console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.config);
      
     }finally{
       setIsAuthenticating(false)
