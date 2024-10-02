@@ -31,7 +31,13 @@ export const AppRoutes = ()=>{
     }}>
         <Stack.Screen name='expensesOverview' component={BottomTabRoutes} options={{ 
             headerTitle: 'Overall Expenses', 
-            headerRight: ({tintColor})=> (<IconButton iconName='add' size={24} color={tintColor}/>)
+            headerRight: ({tintColor})=> (
+                <>
+            <IconButton iconName='add' size={24} color={tintColor}/>
+            <IconButton iconName='logout' size={24} color={tintColor}/>
+                </>
+
+            )
         }}/>
         <Stack.Screen name='manageExpenses' component={ManageExpense} options={{
             // headerTitle: 'Manage Expenses',
