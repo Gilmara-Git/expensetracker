@@ -1,78 +1,120 @@
-import { useLayoutEffect } from "react";
-import { View, Text} from "react-native";
+import { useLayoutEffect , useState} from "react";
+import { View } from "react-native";
 import { styles } from "./styles";
-import { StackNavProps } from "@routes/stack.routes";
 
-import { IconButton } from "@components/IconButton";
-import { Button } from "@components/Button";
-import themes from "../../theme/themes";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useExpense } from "@hooks/useContext";
-import { ExpIdType } from "@contexts/context";
+import { Loading} from '@components/Loading';
+import { useExpense } from '@hooks/useExpensesContext';
+import { ExpIdType } from "@contexts/expensesContext";
+import { FormData } from "@components/InputForm";
+import { InputForm } from "@components/InputForm";
 import { LinearGradient } from "expo-linear-gradient";
-import { InputForm } from '@components/InputForm';
+import { ErrorOverlay } from "@components/ErrorOverlay";
+
+import { storeExpenseInDB, updateExpenseInDB, deleteExpenseInDB } from "@services/apiDatabase";
+
+import { StackNavProps } from "@routes/app.routes";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
+
 
 export const ManageExpense = () => {
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
+  const [ isErrorMessage, setIsErrorMessage ] = useState('');
   const expContext = useExpense();
 
   const route = useRoute();
   const expId = route.params as ExpIdType;
   const navigation = useNavigation<StackNavProps>();
 
-  const isEditing =  expId.id !== 'addExpense';
- 
+  const isEditing = expId.id !== "addExpense";
 
-  useLayoutEffect(() => {
-    //instead of setting headerTitle in the route, set it hear conditionally
-    navigation.setOptions({
-      title: isEditing ? 'Edit Expense' : 'Add Expense',
-    });
-  }, [navigation, isEditing]);
-
-  const handleConfirm = () => {
-    if(isEditing){
-      expContext.updateExpense(
-        expId,
-        {
-          description: 'Sneaker',
-          amount: 71.00,
-          date: new Date('2024-08-31'),
-          category: 'Apparel',
-
-        }
-
-       
+  
+  const handleConfirm = async (fields: FormData) => {
+    const expense = {
+      description: fields.description,
+      amount: Number(fields.amount),
+      date: new Date(fields.date),
+      category: fields.category,
+    };
+    
+    if (isEditing) {
+      setIsSubmitting(true);
+      try{
+        expContext.updateExpense(expId, expense);
+        await updateExpenseInDB(expId.id, expense);
+        setIsSubmitting(false);
         
-      );
-    }else{
-      expContext.addExpense({
-        description: 'Skate',
-        amount: 79.00,
-        date: new Date('2024-09-03'),
-        category: 'Sports',
-      })
+        
+      }catch(error){
+        console.log(error)
+      }finally{
+        navigation.goBack();
+        
+      }
+    } else {
+      setIsSubmitting(true);
+      try {
+        const id = await storeExpenseInDB(expense);
+        expContext.addExpense({...expense, id: id});
+        
+      } catch (error) {
+        setIsErrorMessage('Could not add expense, try again later.')
+        console.log(error);
+      } finally {
+        setIsSubmitting(false); //
+        navigation.goBack();
+      }
     }
-    navigation.goBack();
   };
-
+  
   const handleCancel = () => {
     navigation.goBack();
   };
-
-  const handleDelete = (id: ExpIdType) => {
-    expContext.deleteExpense(id);
-    navigation.goBack();
+  
+  const handleDelete = async(expId: ExpIdType) => {
+    setIsSubmitting(true);
+    try{
+      await deleteExpenseInDB(expId.id);
+      expContext.deleteExpense(expId);
+      navigation.goBack();
+      
+    }catch(error){
+      setIsErrorMessage('Error deleting expenses.')
+      console.log(error)
+    }
+    setIsSubmitting(false); 
+    
   };
 
-  return (
-       <LinearGradient  colors={["#f2edf3", "#c199ea"]}
-          style={styles.background}>
-          <View style={styles.form}>
-                  <InputForm  expenseId={expId} isEditing={isEditing}/>
-          </View>
+  const handleClearErrorMessage = ()=>{
+    setIsErrorMessage('');
+  };
 
-      
+  useLayoutEffect(() => {
+    //instead of setting headerTitle in the route, set it here conditionally
+    navigation.setOptions({
+      title: isEditing ? "Edit Expense" : "Add Expense",
+    });
+  }, [navigation, isEditing]);
+
+  if(isErrorMessage && !isSubmitting){
+    return <ErrorOverlay message={isErrorMessage} onConfirm={handleClearErrorMessage}/>
+  }
   
-      </LinearGradient>
+  return (
+    <LinearGradient colors={["#f2edf3", "#c199ea"]} style={styles.background}>
+      <View style={styles.form}>
+        { isSubmitting ? <Loading/> :
+        <InputForm
+          onDeleteExp={handleDelete}
+          onCancel={handleCancel}
+          onConfirm={handleConfirm}
+          expenseId={expId}
+          isEditing={isEditing}
+        />
+        
+      }
+      </View>
+    </LinearGradient>
   );
 };

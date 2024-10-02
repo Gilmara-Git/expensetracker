@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     color: themes.colors.purple_1,
     fontFamily: themes.fonts.balsamiq_700,
     fontSize: 20,
-    marginTop: 20
+    marginTop: 10
   },
   input: {
     padding: Platform.OS === 'android' ? 6: 12,
@@ -19,13 +19,14 @@ export const styles = StyleSheet.create({
     fontFamily: themes.fonts.balsamiq_400,
     fontSize: 14,
    
+   
   },
   multiline: {
     minHeight: 100,
     textAlignVertical: "top",
   },
   nonMultiline: {
-    width: 120,
+    width: '100%',
     textAlign: "center",
   },
   errorMessage:{
@@ -33,12 +34,20 @@ export const styles = StyleSheet.create({
     marginTop: -6
   },
   error:{
-    color:'#f75c5f',
+    color: themes.colors.warn,
     fontFamily: themes.fonts.balsamiq_400,
     textAlign: "center",
   },
   textInputErrorBorder:{
     borderBottomWidth: 1,
-    borderBottomColor: '#f75c5f'
+    borderBottomColor: themes.colors.warn,
+  
+  },
+  eyeBox:{
+    position: "absolute",
+    top: 24,
+    bottom: 0,
+    right: 10,
+    zIndex: 0.5
   }
 });

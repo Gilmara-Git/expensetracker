@@ -3,6 +3,13 @@ module.exports = function(api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
+      ['module:react-native-dotenv',
+        {
+          //module name indicate how we will import the env variable - import { API_KEY } from '@env';
+          moduleName: '@env',
+          allowUndefined: false
+        }
+      ],
       [
         'module-resolver',
         {
@@ -18,7 +25,8 @@ module.exports = function(api) {
             '@hooks': './src/hooks',
             '@contexts': './src/contexts',
             '@routes': './src/routes',
-            '@theme': './src/themes'
+            '@theme': './src/themes',
+            '@types': './src/@types'
           }
         },
       ],

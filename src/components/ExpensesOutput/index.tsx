@@ -22,7 +22,7 @@ export const ExpensesOutput = ({ data }: ExpensesOutputProps) => {
           <ExpenseItem
             category={item.category}
             description={item.description}
-            amount={item.amount.toFixed(2)}
+            amount={item.amount?.toFixed(2)}
             date={dateFormat(item.date)}
             iconSize={18}
             id={item.id}

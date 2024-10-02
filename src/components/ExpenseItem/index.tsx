@@ -2,7 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import { styles } from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
-import { StackNavProps } from "@routes/stack.routes";
+import { StackNavProps } from "@routes/app.routes";
 import { IconContainer } from "@components/IconContainer";
 
 type ExpenseItemProps = {

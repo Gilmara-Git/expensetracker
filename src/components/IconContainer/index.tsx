@@ -6,7 +6,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 type IconContainerProps ={
     iconSize: number;
     category: string;
-    iconName?: keyof typeof MaterialCommunityIcons.glyphMap,
+    iconName?: keyof typeof MaterialCommunityIcons.glyphMap | keyof typeof MaterialIcons.glyphMap,
 }
 
 export const IconContainer = ({iconSize, category}: IconContainerProps)=>{

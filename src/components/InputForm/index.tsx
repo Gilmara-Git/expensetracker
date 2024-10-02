@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { View, Text , Pressable, Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@components/Button";
 import { styles } from "./styles";
@@ -9,15 +9,15 @@ import { Input } from "@components/Input";
 import themes from "../../theme/themes";
 import { IconContainer } from "@components/IconContainer";
 import { IconButton } from "@components/IconButton";
-import { useExpense } from "@hooks/useContext";
-import { useNavigation } from "@react-navigation/native";
+import { useExpense } from "@hooks/useExpensesContext";
 
-import { StackNavProps } from "@routes/stack.routes";
-import { ExpIdType } from "@contexts/context";
-import { expenseType } from "@contexts/context";
+import { ExpIdType } from "@contexts/expensesContext";
+import { expenseType } from "@contexts/expensesContext";
 import { dateFormat } from "@utils/dateFormat";
+import DateTimePicker , {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 
-type FormData = {
+
+export type FormData = {
   amount: string;
   description: string;
   date: string;
@@ -27,24 +27,56 @@ type FormData = {
 const selectListData = [
   { key: 1, value: "Apparel" },
   { key: 2, value: "Sports" },
-  { key: 3, value: "Groceries" }
-  ,
+  { key: 3, value: "Groceries" },
 ];
 
 type inputFormProps = {
   isEditing: boolean;
   expenseId: ExpIdType;
+  onDeleteExp: (id: ExpIdType) => void;
+  onCancel: () => void;
+  onConfirm: (fields: FormData) => void;
 };
 
-export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
+export const InputForm = ({
+  onConfirm,
+  onCancel,
+  onDeleteExp,
+  isEditing,
+  expenseId,
+}: inputFormProps) => {
+
   const [selectedCategory, setSelectedCategory] = useState("");
-  
+  const [invalidCategory, setInvalidCategory] = useState(false);
   
   const expContext = useExpense();
-  const navigation = useNavigation<StackNavProps>();
+  const expToEdit: any = expContext.expenses.find(
+    (exp: expenseType) => exp.id === expenseId.id
+  );
 
-  const expToEdit:any = expContext.expenses.find((exp:expenseType) => (exp.id === expenseId.id));
- 
+
+  const [date, setDate] = useState<Date>(isEditing && expToEdit ? expToEdit.date : new Date());
+  const [showPicker, setShowPicker] = useState(false);
+
+  
+  const toggleDatePicker = ()=>{
+    setShowPicker(prevState => !prevState)
+  };
+  
+  const onDateChange = (event : DateTimePickerEvent, selectedDate: any )=>{
+    // type can be set or dismissed
+    setDate(selectedDate)
+    if(event.type === 'set' && Platform.OS === 'android'){
+      toggleDatePicker();
+      setDate(selectedDate);
+
+    }
+  };
+
+
+  const onIosDateChange = ()=>{
+    toggleDatePicker()
+ }
 
   const {
     control,
@@ -52,47 +84,45 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      amount: isEditing && expToEdit ?  expToEdit.amount.toFixed(2) : "",
-      description: isEditing && expToEdit ?  expToEdit.description : "",
-      date: isEditing ? dateFormat(expToEdit.date) : "",
+      amount: isEditing && expToEdit ? expToEdit.amount.toFixed(2) : "",
+      description: isEditing && expToEdit ? expToEdit.description : "",
+      date: isEditing && expToEdit ? dateFormat(expToEdit.date) : "",
     },
   });
-  
-  const handleConfirm = (fields: FormData) => {
-    const expense = {
-      description: fields.description,
-      amount: Number(fields.amount),
-      date: new Date(fields.date),
-      category: fields.category
+
+  const submit = (fields: FormData) => {
+    let catIndex;
+
+    if (!isEditing) {
+      catIndex = selectListData.findIndex(
+        (exp) => exp.key === Number(selectedCategory)
+      );
+
+      if (catIndex === -1) {
+        setInvalidCategory(true);
+        return;
+      } else {
+        setInvalidCategory(false);
+        fields.category = selectListData[catIndex].value;
+      }
     }
 
-
-    if (isEditing) {
-      expContext.updateExpense(expenseId, expense);
-    } else {
-      expContext.addExpense(expense);
+    if (isEditing && !selectedCategory) {
+      fields.category = expToEdit.category;
     }
-    navigation.goBack();
-  };
-  
-  const handleCancel = () => {
-    navigation.goBack();
-  };
-  
-  const handleDelete = (id: ExpIdType) => {
-    expContext.deleteExpense(id);
-    navigation.goBack();
-  };
-  
 
-  const submit = ( fields: FormData)=>{
- 
-    const catIndex = selectListData.findIndex(exp => exp.key === Number(selectedCategory))
+    if (isEditing && selectedCategory) {
+      catIndex = selectListData.findIndex(
+        (exp) => exp.key === Number(selectedCategory)
+      );
+      fields.category = selectListData[catIndex].value;
+    }
 
-    fields.category = selectListData[catIndex].value;
+    fields.date = date.toDateString();
+   
 
-    handleConfirm(fields);
-}
+    onConfirm(fields);
+  };
 
   return (
     <>
@@ -111,7 +141,7 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
         </View>
 
         <View style={styles.group}>
-          <View>
+          <View style={{minWidth: '40%'}}>
             <Controller
               control={control}
               rules={{ required: "Type the amount" }}
@@ -130,8 +160,48 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
             />
           </View>
 
-          <View>
-            <Controller
+          <View style={{ minWidth: '40%'}}>
+
+            
+            { !showPicker && (
+              
+              <Pressable onPress={toggleDatePicker}>
+                <Input
+                      label="Date"
+                      placeholder="Pick Date"
+                      // onChangeText={onChange}
+                      value={dateFormat(date)}
+                      // onBlur={onBlur}
+                      multiline={false}
+                      errorMessage={errors.date?.message}
+                      editable={false}
+                      onPressIn={toggleDatePicker}
+                      />
+            </Pressable>
+            )}
+
+
+              { showPicker && (
+                <View >
+
+                  <DateTimePicker 
+                    mode='date'
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default' }
+                    value={date}
+                    onChange={onDateChange}
+                    style={styles.datePickerIOS}
+                    accentColor={themes.colors.purple_1}
+                    />
+                    </View>
+              )}
+          
+              { showPicker && Platform.OS === 'ios' && (
+                <View style={styles.iosButtonContainer}>
+                  <Button title='Cancel' onPress={toggleDatePicker}/>
+                  <Button title='Confirm' onPress={onIosDateChange}/>
+                </View>
+              )}
+            {/* <Controller
               control={control}
               rules={{
                 required: "YYYY-MM-DD",
@@ -152,12 +222,16 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
                 />
               )}
               name="date"
-            />
-          </View>
+            /> */}
+
+       </View>
         </View>
 
         <SelectList
-          defaultOption={{ key: 2, value: "Sports" }}
+          defaultOption={{
+            key: isEditing ? selectedCategory : null,
+            value: isEditing && expToEdit.category && expToEdit.category,
+          }}
           setSelected={(value: string) => setSelectedCategory(value)}
           data={selectListData}
           // onSelect={handleSelected}
@@ -201,6 +275,12 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
           notFoundText="Category not found, Click here to select a category."
           search={false}
         />
+        {invalidCategory && (
+          <View style={styles.catContainer}>
+            <View style={styles.catInnerContainer}></View>
+            <Text style={styles.catText}>Pick a category</Text>
+          </View>
+        )}
 
         <View>
           <Controller
@@ -219,11 +299,10 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
             )}
             name="description"
           />
-        
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="Cancel" onPress={handleCancel} />
+          <Button title="Cancel" onPress={onCancel} />
           <Button
             title={isEditing ? "Update" : "Add"}
             onPress={handleSubmit(submit)}
@@ -231,7 +310,7 @@ export const InputForm = ({ isEditing, expenseId }: inputFormProps) => {
 
           {isEditing && (
             <Button
-              onPress={handleDelete.bind(this, expenseId)}
+              onPress={onDeleteExp.bind(this, expenseId)}
               icon={
                 <IconButton
                   disabled

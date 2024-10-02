@@ -5,10 +5,17 @@ import {
   BalsamiqSans_700Bold,
   useFonts,
 } from "@expo-google-fonts/balsamiq-sans";
+import {
+  SafeAreaView,
+
+} from 'react-native-safe-area-context';
 
 
 import { Routes } from "./src/routes";
-import { ExpensesCtxProvider } from '@contexts/context';
+import { ExpensesCtxProvider } from '@contexts/expensesContext';
+import { AuthContextProvider } from "@contexts/authContext";
+
+
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -18,18 +25,23 @@ export default function App() {
 
   if (!fontsLoaded) {
     return (
+      <SafeAreaView>
+
       <View style={styles.indicator}>
         <ActivityIndicator color="#955999" size={20} />
       </View>
+      </SafeAreaView>
     );
   }
 
   return (
     <>
       <StatusBar style="auto" />
-      <ExpensesCtxProvider>
-        <Routes />
-      </ExpensesCtxProvider>
+      <AuthContextProvider>
+        <ExpensesCtxProvider>
+          <Routes />
+        </ExpensesCtxProvider>
+      </AuthContextProvider>
     </>
   );
 }
