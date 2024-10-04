@@ -25,7 +25,6 @@ useEffect(()=>{
     setIsFetching(true);
     try{
       const expenses = await getExpensesFromDB();
-      console.log(expenses, 'expenses')
       expContext.setExpenses(expenses);
       
     }catch(error){

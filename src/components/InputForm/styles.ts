@@ -21,7 +21,10 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       marginTop: 10,
-      gap: 20
+      gap: 20,
+      height: 40,
+      maxHeight: 40,
+
     }, catContainer:{
       paddingHorizontal: 10
     }, 

@@ -7,7 +7,7 @@ import { useUserContext } from '@hooks/useUserContext';
 
 export const Routes = ()=>{
     const { user} = useUserContext();
-    console.log(user, 'linha10 na index da rota', user.idToken)
+  
     return (
         <NavigationContainer>
            { user.uid ? <AppRoutes/> : <AuthRoutes />} 
