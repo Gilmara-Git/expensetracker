@@ -42,7 +42,12 @@ export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) 
                    <MaterialCommunityIcons name={iconName} color={color} size={20}
                    /> 
                 }
-            
+
+             {  iconName === 'trash-outline' && 
+                   <Ionicons name={iconName} color={color} size={20}
+                   /> 
+                }
+                
             </View>
         </Pressable>
     )
