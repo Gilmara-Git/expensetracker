@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { expenseType } from '@contexts/context';
+import { expenseType } from '@contexts/expensesContext';
 
 export const realtimeDB = axios.create({
     baseURL: 'https://expensetracker-61054-default-rtdb.firebaseio.com/'

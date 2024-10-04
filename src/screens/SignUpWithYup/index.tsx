@@ -36,7 +36,7 @@ export const SignUpWithYup = () => {
   );
 
   const handleCreateAccount = (fields: FormData) => {
-    console.log(fields.email, 'linha38')
+   
   };
   const navigation = useNavigation<AuthNavProps>();
 
