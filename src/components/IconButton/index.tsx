@@ -24,7 +24,7 @@ export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) 
         if(iconName === 'add'){
             navigation.navigate('manageExpenses', { id: 'addExpense'});
         }
-        if(iconName === 'logout'){
+        if(iconName === 'exit'){
             await signOut();
         }
     }
@@ -38,8 +38,8 @@ export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) 
                 <Ionicons name={iconName} color={color} size={size}/>
 
                 }
-                { iconName === 'logout' && 
-                   <MaterialCommunityIcons name={iconName} color={color} size={20}
+                { iconName === 'exit' && 
+                   <Ionicons name={iconName} color={color} size={20}
                    /> 
                 }
 

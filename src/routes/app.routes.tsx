@@ -1,4 +1,5 @@
 
+import { View } from 'react-native';
 import { createNativeStackNavigator, NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { ManageExpense } from '../screens/ManageExpense';
 import { BottomTabRoutes } from './bottom-tab.routes';
@@ -32,10 +33,10 @@ export const AppRoutes = ()=>{
         <Stack.Screen name='expensesOverview' component={BottomTabRoutes} options={{ 
             headerTitle: 'Overall Expenses', 
             headerRight: ({tintColor})=> (
-                <>
-            <IconButton iconName='add' size={24} color={tintColor}/>
-            <IconButton iconName='logout' size={24} color={tintColor}/>
-                </>
+                <View style={{ flexDirection: 'row', gap:5, alignItems: 'center'}}>
+                    <IconButton iconName='add' size={24} color={tintColor}/>
+                    <IconButton iconName='exit' size={24} color={tintColor}/>
+                </View>
 
             )
         }}/>
