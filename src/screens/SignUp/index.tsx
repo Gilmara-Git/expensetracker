@@ -16,7 +16,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from "react-hook-form";
 // import { userSignUp} from '@services/authenticateUser'
 import { useUserContext } from '@hooks/useUserContext';
-
+import themes from '../../theme/themes';
+import Toast from "react-native-toast-message";
 
 // firebase requires a password min length of 6 characters
 const SignUpSchema = z.object({
@@ -29,6 +30,28 @@ const SignUpSchema = z.object({
 });
 
 type FormData = z.infer<typeof SignUpSchema>
+
+const showToast = (errorMessage: string) => {
+  Toast.show({
+    type: "error",
+    text1: errorMessage ? JSON.stringify(errorMessage) : "Try again later.",
+    text2: '"Account might already exists."',
+    text1Style: {
+      color: themes.colors.purple_1,
+      fontSize: 14,
+      fontFamily: themes.fonts.balsamiq_700,
+    },
+    text2Style: {
+      color: themes.colors.warn,
+      fontSize: 14,
+      fontFamily: themes.fonts.balsamiq_400,
+    },
+    position: "top",
+    autoHide: true,
+    visibilityTime: 4000,
+    topOffset: 140,
+  });
+};
 
 
 export const SignUp = () => {
@@ -54,18 +77,21 @@ export const SignUp = () => {
      
 
     }catch(error:any){
+
+      showToast('Error to create an account with this Email.')
+     
       if(error.response){
-        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.response.data);
-        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.response.status);
-        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.response.headers);
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN Data=>',error.response.data);
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN Status=>',error.response.status);
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN Headers=>',error.response.headers);
 
       }else if(error.request){
-        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.request)
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN Request=>',error.request)
 
       }else{
-        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.message);
+        console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN Error Message=>',error.message);
       }
-      console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN',error.config);
+      console.log('CAUGHT_API_REQUEST_ERROR_SIGNUP_SCREEN Error Config=>',error.config);
      
     }finally{
       setIsAuthenticating(false)
