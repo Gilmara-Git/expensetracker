@@ -27,9 +27,14 @@ useEffect(()=>{
       const expenses = await getExpensesFromDB();
       expContext.setExpenses(expenses);
       
-    }catch(error){
-      setIsErrorMessage('An error occurred during fetching expenses.')
-      console.log(error)
+    }catch(error:any){
+      if(error.response.status === 401 && error.response.data.error === 'Permission denied'){
+        setIsErrorMessage('You do not have permission to see the expenses. Logout and Login again.')
+      }else {
+        setIsErrorMessage('An error occurred during fetching expenses.')
+
+      }
+
     }
     setIsFetching(false);
   }
