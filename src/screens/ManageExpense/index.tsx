@@ -1,5 +1,5 @@
 import { useLayoutEffect , useState} from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import { styles } from "./styles";
 
 import { Loading} from '@components/Loading';
@@ -52,18 +52,37 @@ export const ManageExpense = () => {
         
       }
     } else {
-      setIsSubmitting(true);
       try {
+        setIsSubmitting(true);
         const id = await storeExpenseInDB(expense);
         expContext.addExpense({...expense, id: id});
-        
-      } catch (error) {
-        setIsErrorMessage('Could not add expense, try again later.')
-        console.log(error);
-      } finally {
-        setIsSubmitting(false); //
         navigation.goBack();
-      }
+        
+      } catch (error: any) {
+        if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
+         
+          setIsErrorMessage('You do not have permission to add Expenses. Try again later' )
+        }else {
+          setIsErrorMessage('An error occurred during fetching expenses.')
+
+        }
+
+        if(error.response){
+          console.log('CAUGHT_API_REQUEST_AddingExpense Data=>',error.response.data);
+          console.log('CAUGHT_API_REQUEST_AddingExpense Status=>',error.response.status);
+          console.log('CAUGHT_API_REQUEST_AddingExpense Headers=>',error.response.headers);
+  
+        }else if(error.request){
+          console.log('CAUGHT_API_REQUEST_AddingExpense Request=>',error.request)
+  
+        }else{
+          console.log('CAUGHT_API_REQUEST_AddingExpense Error Message=>',error.message);
+        }
+        console.log('CAUGHT_API_REQUEST_EAddingExpense Error Config=>',error.config);
+        
+        setIsSubmitting(false); 
+      } 
+    
     }
   };
   
@@ -72,14 +91,41 @@ export const ManageExpense = () => {
   };
   
   const handleDelete = async(expId: ExpIdType) => {
-    setIsSubmitting(true);
-    try{
+    const deleteExpense = async()=>{
+      setIsSubmitting(true);
       await deleteExpenseInDB(expId.id);
       expContext.deleteExpense(expId);
       navigation.goBack();
+  
+    }
+    
+    try{
+      Alert.alert('Delete Expense','Do you want to remove this expense?',[
+     { text: 'No', onPress: handleCancel},{ text: 'Yes', style: 'destructive', onPress: deleteExpense }])
+
       
-    }catch(error){
-      setIsErrorMessage('Error deleting expenses.')
+    }catch(error:any){
+      if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
+         
+        setIsErrorMessage('You do not have permission to delete Expenses. Try again later' )
+      }else {
+        setIsErrorMessage('An error occurred during fetching expenses.')
+
+      }
+
+      if(error.response){
+        console.log('CAUGHT_API_REQUEST_AddingExpense Data=>',error.response.data);
+        console.log('CAUGHT_API_REQUEST_AddingExpense Status=>',error.response.status);
+        console.log('CAUGHT_API_REQUEST_AddingExpense Headers=>',error.response.headers);
+
+      }else if(error.request){
+        console.log('CAUGHT_API_REQUEST_AddingExpense Request=>',error.request)
+
+      }else{
+        console.log('CAUGHT_API_REQUEST_AddingExpense Error Message=>',error.message);
+      }
+      console.log('CAUGHT_API_REQUEST_EAddingExpense Error Config=>',error.config);
+      // setIsErrorMessage('Error deleting expenses.')
       console.log(error)
     }
     setIsSubmitting(false); 

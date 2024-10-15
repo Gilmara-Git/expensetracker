@@ -7,13 +7,15 @@ export const styles = StyleSheet.create({
         flex:1,
         alignItems: 'center',
         justifyContent: 'center',
-        gap:30
+        gap:30,
+        padding: 30
    
     },
     text: {
         color: themes.colors.purple_3 ,
         fontFamily: themes.fonts.balsamiq_400,
-        fontSize: 16
+        fontSize: 16,
+        textAlign: 'center'
     },
     title:{
         fontFamily: themes.fonts.balsamiq_700,

@@ -65,6 +65,8 @@ export const AuthContextProvider = ({ children }: AuthContextProvider) => {
 
       await setUserStorage(userDetails);
       await setTokenStorage(userDetails.idToken, userDetails.refreshToken);
+      //adding token to the requests headers, it contains the user.id
+      userBackend.defaults.headers.common['Authorization'] = `Bearer ${userDetails.idToken}`;
       setUser(userDetails);
     } catch (error) {
       throw error;
@@ -93,7 +95,10 @@ export const AuthContextProvider = ({ children }: AuthContextProvider) => {
 
       await setUserStorage(userDetails);
       await setTokenStorage(userDetails.idToken, userDetails.refreshToken);
+      //adding token to the requests headers, it contains the user.id
+      userBackend.defaults.headers.common['Authorization'] = `Bearer ${userDetails.idToken}`;
       setUser(userDetails);
+    
     } catch (error) {
       throw error;
     }

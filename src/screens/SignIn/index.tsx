@@ -71,6 +71,7 @@ export const SignIn = () => {
       await signIn(fields.email, fields.password);
     } catch (error: any) {
       if (error.response) {
+      
         if (
           error.response.status === 400 &&
           error.response.data.error.message === "INVALID_LOGIN_CREDENTIALS"

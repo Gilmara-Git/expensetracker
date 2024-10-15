@@ -43,8 +43,9 @@ userBackend.registerInterceptTokenManager = (signOut) => {
       return response;
     },
     async (requestError) => {
+      console.log('There is a request errorooooooooo', requestError.response.status)
       if (
-        requestError.response.status === 400 &&
+        requestError.response.status === 400  || requestError.response.status === undefined &&
         requestError.response.data.error.message === "INVALID_LOGIN_CREDENTIALS"
       ) {
         throw requestError;
@@ -59,14 +60,18 @@ userBackend.registerInterceptTokenManager = (signOut) => {
       }
 
       if (requestError?.response?.status === 401) {
-        if (
-          requestError.response.data.message === "INVALID_CUSTOM_TOKEN" ||
-          requestError.response.data.message === "TOKEN_EXPIRED" ||
-          requestError.response.data.message === "INVALID_REFRESH_TOKEN" ||
-          requestError.response.data.message === "INVALID_GRANT_TYPE"
-        ) {
+        console.log(requestError.response.data.status, '====================>>>>>>STATUSSSSSS')
+        console.log(requestError.response.data.message,'linha64 na authenticateUser') 
+        // if (
+        //   requestError.response.data.message === "INVALID_CUSTOM_TOKEN" ||
+        //   requestError.response.data.message === "TOKEN_EXPIRED" ||
+        //   requestError.response.data.message === "INVALID_REFRESH_TOKEN" ||
+        //   requestError.response.data.message === "INVALID_GRANT_TYPE"
+        // ) {
           const { refresh_token } = await getTokenStorage();
 
+          console.log('REFRESH TOKENNNNNNNNNNNNNNN  AUTHENTICATEUSER', refresh_token)
+        
           if (!refresh_token) {
             signOut();
             return Promise.reject(requestError);
@@ -77,6 +82,8 @@ userBackend.registerInterceptTokenManager = (signOut) => {
           const originalRequestConfig = requestError.response.config;
 
           if (isRefreshingToken) {
+            const agora =  new Date()
+            console.log('SOU O TOKEN SENDO REFRESHED',  agora.getDate(), agora.getHours(), agora.getMinutes(), 'linha81')
             return new Promise((resolve, reject) => {
               requestsQueue.push({
                 onSuccess: (token: string) => {
@@ -107,7 +114,10 @@ userBackend.registerInterceptTokenManager = (signOut) => {
                   refresh_token: refresh_token,
                 }
               );
-
+              const agora =  new Date()
+              console.log('SOU O TOKEN SENDO REFRESHED',  agora.getDate(), agora.getHours(), agora.getMinutes(), 'linha112')
+              console.log('SOU O DATA COM O A RESPOSTA PARA CONSEGUIR NOVO TOLEN, LINHA 114', data)
+              
               await setTokenStorage(data.idToken, data.refresh_token);
 
               if (originalRequestConfig.data) {
@@ -131,7 +141,7 @@ userBackend.registerInterceptTokenManager = (signOut) => {
                 request.onSuccess(data.idToken);
               });
 
-              // console.log('Workflow to update token is completed')
+              console.log('Workflow to update token is completed')
               resolve(userBackend(originalRequestConfig));
             } catch (error) {
               reject(requestError);
@@ -148,7 +158,7 @@ userBackend.registerInterceptTokenManager = (signOut) => {
           });
         }
         signOut();
-      }
+      // }
 
       if (requestError.response && requestError.response.data) {
         return Promise.reject(new AppError(requestError.response.data.message));
