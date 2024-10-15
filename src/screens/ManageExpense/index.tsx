@@ -1,5 +1,5 @@
 import { useLayoutEffect , useState} from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import { styles } from "./styles";
 
 import { Loading} from '@components/Loading';
@@ -91,11 +91,18 @@ export const ManageExpense = () => {
   };
   
   const handleDelete = async(expId: ExpIdType) => {
-    try{
+    const deleteExpense = async()=>{
       setIsSubmitting(true);
       await deleteExpenseInDB(expId.id);
       expContext.deleteExpense(expId);
       navigation.goBack();
+  
+    }
+    
+    try{
+      Alert.alert('Delete Expense','Do you want to remove this expense?',[
+     { text: 'No', onPress: handleCancel},{ text: 'Yes', style: 'destructive', onPress: deleteExpense }])
+
       
     }catch(error:any){
       if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
