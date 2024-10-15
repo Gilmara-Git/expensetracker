@@ -1,5 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Pressable, View , PressableProps} from 'react-native';
+import { Pressable, View , PressableProps, Alert} from 'react-native';
 import { styles } from './styles';
 import { StackNavProps } from '@routes/app.routes';
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +25,11 @@ export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) 
             navigation.navigate('manageExpenses', { id: 'addExpense'});
         }
         if(iconName === 'exit'){
-            await signOut();
+            Alert.alert('Sign Out','Would you like to Sign Out now?',[
+                {text: 'No'},
+                {text: 'Yes', style: 'destructive', onPress: async()=> await signOut()}, 
+            ])
+            
         }
     }
 
