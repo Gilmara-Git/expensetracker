@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap:30,
-        padding: 20
+        padding: 30
    
     },
     text: {
