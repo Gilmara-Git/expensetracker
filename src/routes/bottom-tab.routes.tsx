@@ -2,6 +2,7 @@ import {
   createBottomTabNavigator,
   BottomTabNavigationProp,
 } from "@react-navigation/bottom-tabs";
+import { Platform } from 'react-native';
 
 import { AllExpenses } from "../screens/AllExpenses";
 import { RecentExpenses } from "../screens/RecentExpenses";
@@ -23,7 +24,8 @@ export const BottomTabRoutes = () => {
     <Navigator screenOptions={{ 
        headerShown: false,
         tabBarStyle: { 
-            backgroundColor: themes.colors.yellow_1,    
+            backgroundColor: themes.colors.yellow_1,  
+            height: Platform.OS === 'android' ? 80 : 96  
         },
         tabBarActiveTintColor: themes.colors.purple_3, 
         }}>

@@ -5,6 +5,7 @@ import { styles } from "./styles";
 import { ExpensesSummary } from "@components/ExpensesSummary";
 import { ExpensesOutput } from "@components/ExpensesOutput";
 import { useExpense } from '@hooks/useExpensesContext';
+import { useUserContext } from '@hooks/useUserContext';
 
 
 import  {getRecentPastDays } from '@utils/getLast7days';
@@ -18,8 +19,10 @@ import { ErrorOverlay } from '@components/ErrorOverlay';
 export const RecentExpenses = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [isErrorMessage, setIsErrorMessage] = useState('');
+  const [ tokenExpired, setTokenExpired ] = useState(false);
 
   const expContext = useExpense();
+  const userContext = useUserContext();
 
   const recentExpenses =  expContext.expenses.filter((expense: expenseType)=>{ 
     const today = new Date();
@@ -32,6 +35,10 @@ export const RecentExpenses = () => {
   const handleClearErrorMessage = ()=>{
     setIsErrorMessage('')
   }
+
+  const handleSignOut = ()=>{
+    userContext.signOut()
+  };
   
   useEffect(()=>{
     const fetchExpenses = async()=>{
@@ -41,8 +48,12 @@ export const RecentExpenses = () => {
         expContext.setExpenses(expenses);
 
       }catch(error:any){
+      
         if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
-          setIsErrorMessage('You do not have permission to see the expenses. Logout and Login again.')
+          setIsErrorMessage('Session expired. Sign out and Sign in again to see your expenses.')
+          setTokenExpired(true);
+          console.log(new Date(), '===> New date in Recent Expenses')
+          
         }else {
           setIsErrorMessage('An error occurred during fetching expenses.')
 
@@ -72,7 +83,12 @@ export const RecentExpenses = () => {
   },[])
   
   if(isErrorMessage && !isFetching){
-    return <ErrorOverlay message={isErrorMessage} onConfirm={handleClearErrorMessage}/>
+    return <ErrorOverlay 
+      permissionExpired={tokenExpired} 
+      message={isErrorMessage} 
+      onConfirm={handleClearErrorMessage}
+      onTokenExpired={handleSignOut}
+      />
   }
 
   return (
