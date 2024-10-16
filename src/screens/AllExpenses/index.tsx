@@ -51,7 +51,16 @@ useEffect(()=>{
 
   fetchExpenses();
 
-},[])
+},[]);
+
+
+useEffect(()=>{
+  if(tokenExpired){
+    setTimeout(()=>{
+      handleSignOut();
+    },4000)
+  }
+},[tokenExpired])
 
 
   if(isErrorMessage && !isFetching){

@@ -81,6 +81,15 @@ export const RecentExpenses = () => {
     fetchExpenses();
   
   },[])
+
+
+  useEffect(()=>{
+    if(tokenExpired){
+      setTimeout(()=>{
+        handleSignOut();
+      },4000)
+    }
+  },[tokenExpired])
   
   if(isErrorMessage && !isFetching){
     return <ErrorOverlay 
@@ -90,6 +99,8 @@ export const RecentExpenses = () => {
       onTokenExpired={handleSignOut}
       />
   }
+
+ 
 
   return (
     <View style={styles.container}>
