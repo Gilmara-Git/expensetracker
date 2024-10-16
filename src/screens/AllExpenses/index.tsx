@@ -36,7 +36,7 @@ useEffect(()=>{
       expContext.setExpenses(expenses);
       
     }catch(error:any){
-      if(error.response.status === 401 && error.response.data.error === 'Permission denied'){
+      if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
         setIsErrorMessage('Session expired. Sign out and Sign in again to see your expenses.')
         setTokenExpired(true);
         console.log(new Date(), '===> New date in All Expenses')
@@ -51,7 +51,16 @@ useEffect(()=>{
 
   fetchExpenses();
 
-},[])
+},[]);
+
+
+useEffect(()=>{
+  if(tokenExpired){
+    setTimeout(()=>{
+      handleSignOut();
+    },4000)
+  }
+},[tokenExpired])
 
 
   if(isErrorMessage && !isFetching){
