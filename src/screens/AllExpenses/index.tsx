@@ -37,8 +37,8 @@ useEffect(()=>{
       
     }catch(error:any){
       if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
-        setIsErrorMessage('Session expired. Sign out and Sign in again to see your expenses.')
         setTokenExpired(true);
+        setIsErrorMessage('Session expired. Sign out and Sign in again to see your expenses.')
         console.log(new Date(), '===> New date in All Expenses')
       }else {
         setIsErrorMessage('An error occurred during fetching expenses.')

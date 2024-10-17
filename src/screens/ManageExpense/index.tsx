@@ -1,10 +1,11 @@
-import { useLayoutEffect , useState} from "react";
+import { useLayoutEffect , useState, useEffect} from "react";
 import { View, Alert } from "react-native";
 import { styles } from "./styles";
 
 import { Loading} from '@components/Loading';
 import { useExpense } from '@hooks/useExpensesContext';
 import { ExpIdType } from "@contexts/expensesContext";
+import { useUserContext } from "@hooks/useUserContext";
 import { FormData } from "@components/InputForm";
 import { InputForm } from "@components/InputForm";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,7 +21,9 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 export const ManageExpense = () => {
   const [ isSubmitting, setIsSubmitting ] = useState(false);
   const [ isErrorMessage, setIsErrorMessage ] = useState('');
+  const [ tokenExpired, setTokenExpired ] = useState(false);
   const expContext = useExpense();
+  const userContext = useUserContext();
 
   const route = useRoute();
   const expId = route.params as ExpIdType;
@@ -62,6 +65,7 @@ export const ManageExpense = () => {
         if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
          
           setIsErrorMessage('You do not have permission to add Expenses. Try again later' )
+          setTokenExpired(true)
         }else {
           setIsErrorMessage('An error occurred during fetching expenses.')
 
@@ -136,6 +140,10 @@ export const ManageExpense = () => {
     setIsErrorMessage('');
   };
 
+  const handleSignOut = ()=>{
+    userContext.signOut()
+  };
+
   useLayoutEffect(() => {
     //instead of setting headerTitle in the route, set it here conditionally
     navigation.setOptions({
@@ -144,8 +152,20 @@ export const ManageExpense = () => {
   }, [navigation, isEditing]);
 
   if(isErrorMessage && !isSubmitting){
-    return <ErrorOverlay message={isErrorMessage} onConfirm={handleClearErrorMessage}/>
+    return <ErrorOverlay  permissionExpired={tokenExpired} 
+                          message={isErrorMessage} 
+                          onConfirm={handleClearErrorMessage}
+                          onTokenExpired={handleSignOut}
+                          />
   }
+
+  useEffect(()=>{
+    if(tokenExpired){
+      setTimeout(()=>{
+        handleSignOut();
+      },4000)
+    }
+  },[tokenExpired])
   
   return (
     <LinearGradient colors={["#f2edf3", "#c199ea"]} style={styles.background}>

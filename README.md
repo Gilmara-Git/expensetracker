@@ -4,10 +4,11 @@
 <h3 align="center">Sign In and Sign Out</h3>
 <img src="https://github.com/user-attachments/assets/6ccc74dd-87a3-4089-adf1-780b6c863de0" alt="gif"/>
 
+<h3 align="center">Add, Edit and Delete expenses</h3>
+<img src="https://github.com/user-attachments/assets/0501c590-504b-49b6-b9cf-4e044e207f0b" alt="Manage Expenses gif"/>
 
 <h3 align="center">Token/Session Expired</h3>
 <img src="https://github.com/user-attachments/assets/6eb5b539-24a6-4b34-b31c-a58686ccbbf8" alt="Session Expired"/>
-
 
 
 </div>
@@ -27,7 +28,7 @@
 # Motivation
 
 - Get expert in React Native.
-- Develop an app to track expenses
+- Develop an app to **track expenses**
 - Stay updated with new technologies as they always bring something new.
 - Interact with the Dev Community, learn together and progress as a Developer.
 - Keep committed with my goals.</br>
@@ -47,6 +48,8 @@
 - React Navigation
 - Axios
 - React Native Toast Message
+- React Native community datetimepicker
+- React Native dropdown select list
 - React Hook form
 - Zod
 - Firebase Realtime Database
