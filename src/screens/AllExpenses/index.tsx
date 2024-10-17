@@ -11,6 +11,9 @@ import { useUserContext } from '@hooks/useUserContext';
 import { getExpensesFromDB } from '@services/apiDatabase';
 import { ErrorOverlay } from '@components/ErrorOverlay';
 
+import { AuthNavProps } from '@routes/auth.routes';
+import { useNavigation } from "@react-navigation/native";
+
 
 export const AllExpenses = () => {
   const [isFetching, setIsFetching] = useState(true);
@@ -19,6 +22,7 @@ export const AllExpenses = () => {
 
   const expContext = useExpense();
   const userContext = useUserContext();
+  const navigation = useNavigation<AuthNavProps>();
 
   const handleClearErrorMessage = ()=>{
     setIsErrorMessage('');
@@ -39,7 +43,7 @@ useEffect(()=>{
       if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
         setTokenExpired(true);
         setIsErrorMessage('Session expired. Sign out and Sign in again to see your expenses.')
-        console.log(new Date(), '===> New date in All Expenses')
+       
       }else {
         setIsErrorMessage('An error occurred during fetching expenses.')
 
@@ -58,6 +62,8 @@ useEffect(()=>{
   if(tokenExpired){
     setTimeout(()=>{
       handleSignOut();
+      navigation.navigate("signIn");
+      
     },4000)
   }
 },[tokenExpired])

@@ -13,8 +13,6 @@ type IconButtonProps = PressableProps & {
     color: string | any,
     uploadReceipt?: ()=>void,
     loadMap?: ()=>void,
-
-  
 }
 
 export const IconButton = ({iconName, size, color ,uploadReceipt, loadMap, ...rest }: IconButtonProps) => {
@@ -41,6 +39,7 @@ export const IconButton = ({iconName, size, color ,uploadReceipt, loadMap, ...re
         if(iconName === 'add'){
             navigation.navigate('manageExpenses', { id: 'addExpense'});
         }
+
         if(iconName === 'exit'){
             Alert.alert('Sign Out','Would you like to Sign Out now?',[
                 {text: 'No'},
@@ -64,7 +63,7 @@ export const IconButton = ({iconName, size, color ,uploadReceipt, loadMap, ...re
                    /> 
                 }
 
-             {  iconName === 'trash-outline' && 
+                {  iconName === 'trash-outline' && 
                    <Ionicons name={iconName} color={color} size={size}
                    /> 
                 }
