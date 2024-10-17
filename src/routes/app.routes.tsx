@@ -2,16 +2,19 @@
 import { View } from 'react-native';
 import { createNativeStackNavigator, NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { ManageExpense } from '../screens/ManageExpense';
+import { PhotoMap} from '@screens/PhotoMap';
 import { BottomTabRoutes } from './bottom-tab.routes';
 import themes from '../theme/themes';
 
 import { IconButton } from '@components/IconButton';
 import { BottomTabTypes } from '@routes/bottom-tab.routes';
+import { ExpIdType } from '@contexts/expensesContext';
 
 
 export type StackNavigatorTypes = {
     expensesOverview: BottomTabTypes,
-    manageExpenses: { id: string  }
+    manageExpenses: { id: string  },
+    photoMap: { id: ExpIdType },
 
    
 }
@@ -41,6 +44,12 @@ export const AppRoutes = ()=>{
             )
         }}/>
         <Stack.Screen name='manageExpenses' component={ManageExpense} options={{
+            // headerTitle: 'Manage Expenses',
+            presentation: 'modal',
+            
+               
+        }}/>
+         <Stack.Screen name='photoMap' component={PhotoMap} options={{
             // headerTitle: 'Manage Expenses',
             presentation: 'modal',
             
