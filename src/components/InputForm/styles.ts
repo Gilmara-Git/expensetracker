@@ -50,6 +50,16 @@ export const styles = StyleSheet.create({
       marginTop: -2,
       marginBottom: 20,
       gap: 20
+    },
+    link:{
+      marginTop: -22
+    },
+    receiptMap:{ 
+      textAlign: 'center', 
+      color: themes.colors.yellow_1,
+      fontFamily: themes.fonts.balsamiq_400,
+      fontSize: 16
+
     }
    
    

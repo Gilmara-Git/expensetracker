@@ -1,5 +1,5 @@
 import { useLayoutEffect , useState, useEffect} from "react";
-import { View, Alert } from "react-native";
+import { View, Alert} from "react-native";
 import { styles } from "./styles";
 
 import { Loading} from '@components/Loading';
@@ -179,6 +179,7 @@ export const ManageExpense = () => {
           isEditing={isEditing}
         />
         
+     
       }
       </View>
     </LinearGradient>

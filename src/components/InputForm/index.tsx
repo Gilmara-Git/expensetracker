@@ -15,6 +15,8 @@ import { ExpIdType } from "@contexts/expensesContext";
 import { expenseType } from "@contexts/expensesContext";
 import { dateFormat } from "@utils/dateFormat";
 import DateTimePicker , {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import { useNavigation } from "@react-navigation/native";
+import { StackNavProps } from "@routes/app.routes";
 
 
 export type FormData = {
@@ -48,6 +50,7 @@ export const InputForm = ({
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [invalidCategory, setInvalidCategory] = useState(false);
+  const navigation = useNavigation<StackNavProps>();
   
   const expContext = useExpense();
   const expToEdit: any = expContext.expenses.find(
@@ -201,28 +204,7 @@ export const InputForm = ({
                   <Button title='Confirm' onPress={onIosDateChange}/>
                 </View>
               )}
-            {/* <Controller
-              control={control}
-              rules={{
-                required: "YYYY-MM-DD",
-                pattern: {
-                  value: /[0-9]{4}-[0-9]{2}-[0-9]{2}/,
-                  message: "YYYY-MM-DD",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label="Date"
-                  placeholder="YYYY-MM-DD"
-                  onChangeText={onChange}
-                  value={value}
-                  onBlur={onBlur}
-                  multiline={false}
-                  errorMessage={errors.date?.message}
-                />
-              )}
-              name="date"
-            /> */}
+        
 
        </View>
         </View>
@@ -300,6 +282,10 @@ export const InputForm = ({
             name="description"
           />
         </View>
+          
+            <Pressable style={ styles.link} onPress={()=>navigation.navigate('photoMap', { id: expenseId})}>
+              <Text style={styles.receiptMap}>Upload receipt and location</Text>
+            </Pressable>
 
         <View style={styles.buttonContainer}>
           <Button title="Cancel" onPress={onCancel} />
@@ -307,7 +293,6 @@ export const InputForm = ({
             title={isEditing ? "Update" : "Add"}
             onPress={handleSubmit(submit)}
           />
-
           {isEditing && (
             <Button
               onPress={onDeleteExp.bind(this, expenseId)}
