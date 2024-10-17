@@ -11,16 +11,33 @@ type IconButtonProps = PressableProps & {
     iconName: keyof typeof Ionicons.glyphMap | keyof typeof MaterialCommunityIcons.glyphMap,
     size: number,
     color: string | any,
+    uploadReceipt?: ()=>void,
+    loadMap?: ()=>void,
+
   
 }
 
-export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) => {
+export const IconButton = ({iconName, size, color ,uploadReceipt, loadMap, ...rest }: IconButtonProps) => {
+
     
     const { signOut } = useUserContext();
 
     const navigation = useNavigation<StackNavProps>();
     
     const handleAction = async ()=>{
+
+        if(iconName === 'receipt-sharp'){
+            if(uploadReceipt){
+                uploadReceipt()
+            }
+        }
+
+        if(iconName === 'google-maps'){
+            if(loadMap){
+                loadMap()
+            }
+
+        }
         if(iconName === 'add'){
             navigation.navigate('manageExpenses', { id: 'addExpense'});
         }
@@ -43,13 +60,25 @@ export const IconButton = ({iconName, size, color , ...rest }: IconButtonProps) 
 
                 }
                 { iconName === 'exit' && 
-                   <Ionicons name={iconName} color={color} size={20}
+                   <Ionicons name={iconName} color={color} size={size}
                    /> 
                 }
 
              {  iconName === 'trash-outline' && 
-                   <Ionicons name={iconName} color={color} size={20}
+                   <Ionicons name={iconName} color={color} size={size}
                    /> 
+                }
+
+                { iconName == 'receipt-sharp' && 
+                <Ionicons name={iconName} color={color} size={size}
+                /> 
+                
+                }
+
+            { iconName == 'google-maps' && 
+                <MaterialCommunityIcons name={iconName} color={color} size={size}
+                /> 
+                
                 }
                 
             </View>
