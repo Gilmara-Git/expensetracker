@@ -11,6 +11,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "ExpenseTracker needs your permission to access your camera."
+        }
+      ]
+    ],
+    
+    "assetBundlePatterns": [ "**/*"],
+    
     "ios": {
       "supportsTablet": true
     },
