@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import themes from "../../theme/themes";
-import { Platform } from 'react-native';
+
 
 export const styles = StyleSheet.create({
   background: {
@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   },
   // overflow and borderRadius applied on wrappingContainer, so borderRadius and Shadow work on both platform
   photo: {
-    flex: 1,
+    flex: 2,
     margin: 30,
     elevation: 4,
     shadowColor: themes.colors.jetBlack,
