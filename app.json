@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expesnsetracker",
-    "slug": "expesnsetracker",
+    "name": "expensetracker",
+    "slug": "expensetracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +17,13 @@
         {
           "cameraPermission": "ExpenseTracker needs your permission to access your camera."
         }
-      ]
+      ],
+      [
+        "expo-location",
+        {
+        "locationAlwaysAndWhenInUsePermission": "Allow ExpenseTracker to use your location."
+        }
+        ]
     ],
     
     "assetBundlePatterns": [ "**/*"],
