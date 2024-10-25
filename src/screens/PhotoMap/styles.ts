@@ -65,6 +65,25 @@ export const styles = StyleSheet.create({
       bottom:10, 
       right: 10 
     },
+    mapContainer:{
+      // width: '100%',
+      // height: '100%',
+      position: 'absolute',
+      backgroundColor: '#6600000',
+      alignItems: 'center',
+      justifyContent: 'center',
+      top: 15,
+      right: 10,
+    },
+    mapButton:{
+    
+  
+    },
+    mapContainerParams:{
+      position: 'absolute',
+    
+  
+    },
     photoIconContainer:{
       alignItems: 'center',
     },

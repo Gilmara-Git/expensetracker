@@ -31,6 +31,7 @@ export const ManageExpense = () => {
   const expId = route.params as ExpIdType;
   const navigation = useNavigation<StackNavProps>();
 
+
   const isEditing = expId.id !== "addExpense";
 
   const handleConfirm = async (fields: FormData) => {
@@ -110,6 +111,7 @@ export const ManageExpense = () => {
   };
 
   const handleDelete = async (expId: ExpIdType) => {
+    try {
     const deleteExpense = async () => {
       setIsSubmitting(true);
       await deleteExpenseInDB(expId.id);
@@ -117,7 +119,6 @@ export const ManageExpense = () => {
       navigation.goBack();
     };
 
-    try {
       Alert.alert("Delete Expense", "Do you want to remove this expense?", [
         { text: "No", onPress: handleCancel },
         { text: "Yes", style: "destructive", onPress: deleteExpense },

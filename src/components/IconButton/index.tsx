@@ -1,4 +1,4 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons , FontAwesome} from '@expo/vector-icons';
 import { Pressable, View , PressableProps, Alert} from 'react-native';
 import { styles } from './styles';
 import { StackNavProps } from '@routes/app.routes';
@@ -8,7 +8,7 @@ import { useUserContext } from '@hooks/useUserContext';
 
 
 type IconButtonProps = PressableProps & {
-    iconName: keyof typeof Ionicons.glyphMap | keyof typeof MaterialCommunityIcons.glyphMap,
+    iconName: keyof typeof Ionicons.glyphMap | keyof typeof MaterialCommunityIcons.glyphMap | keyof typeof FontAwesome.glyphMap,
     size: number,
     color: string | any,
     uploadReceipt?: ()=>void,
@@ -59,6 +59,15 @@ export const IconButton = ({iconName, size, color ,uploadReceipt, loadMap, ...re
 
                 }
                 { iconName === 'exit' && 
+                   <Ionicons name={iconName} color={color} size={size}
+                   /> 
+                }
+                 { iconName === 'save' && 
+                <FontAwesome name={iconName} color={color} size={size}/>
+
+                }
+
+                {  iconName === 'map' && 
                    <Ionicons name={iconName} color={color} size={size}
                    /> 
                 }
