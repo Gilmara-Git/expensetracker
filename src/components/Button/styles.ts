@@ -17,5 +17,8 @@ export const styles =  StyleSheet.create({
         fontSize: 16,
         color: themes.colors.yellow_2,
      
+    },
+    pickLocation: {
+        color: themes.colors.warn,
     }
 })

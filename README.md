@@ -40,6 +40,7 @@
 - Typescript
 - Expo
 - Expo Location
+- Expo ImagePicker(cameraPermission)
 - React native maps
 - Expo google fonts
 - Expo Liner Gradient
@@ -53,7 +54,7 @@
 - React Hook form
 - Zod
 - Firebase Realtime Database
-
+- Google Maps Static API
 
 
 

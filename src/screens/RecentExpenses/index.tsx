@@ -52,7 +52,7 @@ export const RecentExpenses = () => {
         if(error.response?.status === 401 && error.response.data.error === 'Permission denied'){
           setTokenExpired(true);
           setIsErrorMessage('Session expired. Sign out and Sign in again to see your expenses.')
-          console.log(new Date(), '===> New date in Recent Expenses')
+        
           
         }else {
           setIsErrorMessage('An error occurred during fetching expenses.')

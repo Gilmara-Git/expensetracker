@@ -9,12 +9,14 @@ import themes from '../theme/themes';
 import { IconButton } from '@components/IconButton';
 import { BottomTabTypes } from '@routes/bottom-tab.routes';
 import { ExpIdType } from '@contexts/expensesContext';
+import { MapViewScreen } from '@screens/MapViewScreen';
 
 
 export type StackNavigatorTypes = {
     expensesOverview: BottomTabTypes,
     manageExpenses: { id: string  },
-    photoMap: { id: ExpIdType },
+    photoMap: { id: ExpIdType , lat?: number , long?: number},
+    mapViewScreen: { id: string ,latitude: number, longitude: number}
 
    
 }
@@ -50,6 +52,13 @@ export const AppRoutes = ()=>{
                
         }}/>
          <Stack.Screen name='photoMap' component={PhotoMap} options={{
+            // headerTitle: 'Manage Expenses',
+            presentation: 'modal',
+            
+               
+        }}/>
+
+        <Stack.Screen  name='mapViewScreen' component={MapViewScreen} options={{
             // headerTitle: 'Manage Expenses',
             presentation: 'modal',
             

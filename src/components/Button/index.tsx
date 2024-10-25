@@ -10,7 +10,7 @@ type ButtonProps = TouchableOpacityProps & {
 export const Button = ({ title, icon, ...rest }: ButtonProps) => {
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.7} {...rest}>
-      {icon ? icon : <Text style={styles.title}>{title}</Text>}
+      {icon ? icon : <Text style={[styles.title, title === 'Pick Location' && styles.pickLocation]}>{title}</Text>}
     </TouchableOpacity>
   );
 };

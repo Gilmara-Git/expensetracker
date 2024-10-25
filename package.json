@@ -32,7 +32,9 @@
     "yup": "^1.4.0",
     "yup-password": "^0.4.0",
     "zod": "^3.23.8",
-    "expo-image-picker": "~15.0.7"
+    "expo-image-picker": "~15.0.7",
+    "expo-location": "~17.0.1",
+    "react-native-maps": "1.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
