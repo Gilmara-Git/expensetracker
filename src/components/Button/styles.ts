@@ -19,6 +19,6 @@ export const styles =  StyleSheet.create({
      
     },
     pickLocation: {
-        color: themes.colors.warn,
+        color: themes.colors.purple_3,
     }
 })

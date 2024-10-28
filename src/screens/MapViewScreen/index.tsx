@@ -1,7 +1,7 @@
-import {  useState, useRef, useEffect } from 'react';
+import {  useState, useEffect } from 'react';
 import { View , Alert} from 'react-native';
 import { Button } from '@components/Button';
-import MapView , { Marker, MapMarker,  MapMarkerProps, LatLng, MapPressEvent} from 'react-native-maps';
+import MapView , { Marker, LatLng, MapPressEvent} from 'react-native-maps';
 import { useNavigation , useRoute } from '@react-navigation/native';
 import { StackNavProps } from "@routes/app.routes";
 import { styles } from './styles';
@@ -17,15 +17,15 @@ export const MapViewScreen = ()=>{
     console.log(route.params.id)
     console.log(expenseId)
   
-    const mapRef = useRef<MapView>(null);
+
 
     const handleConfirm = ()=>{
-
+          
             if(!selectedCoords){
                 return Alert.alert('No location picked!','Please select a location on the map.')
             }
 
-            navigation.navigate('photoMap', { id: route.params.id, lat: selectedCoords?.latitude, long: selectedCoords?.longitude})
+            navigation.navigate('photoMap', { lat: selectedCoords?.latitude, long: selectedCoords?.longitude})
         
     }
 
@@ -49,7 +49,6 @@ export const MapViewScreen = ()=>{
     return (
             <View style={{flex:1}}>
                 <MapView 
-                    ref={mapRef}
                     zoomControlEnabled
                     zoomEnabled
                     style={styles.mapContainer}
