@@ -283,7 +283,7 @@ export const InputForm = ({
           />
         </View>
           
-            <Pressable style={ styles.link} onPress={()=>navigation.navigate('photoMap', { id: expenseId})}>
+            <Pressable style={ styles.link} onPress={()=>navigation.navigate('photoMap', { id: expenseId.id})}>
               <Text style={styles.receiptMap}>Upload receipt and location</Text>
             </Pressable>
 

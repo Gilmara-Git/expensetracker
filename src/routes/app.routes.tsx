@@ -15,8 +15,8 @@ import { MapViewScreen } from '@screens/MapViewScreen';
 export type StackNavigatorTypes = {
     expensesOverview: BottomTabTypes,
     manageExpenses: { id: string  },
-    photoMap: { id: ExpIdType , lat?: number , long?: number},
-    mapViewScreen: { id: string ,latitude: number, longitude: number}
+    photoMap: { id?: string , lat?: number , long?: number},
+    mapViewScreen: { latitude: number, longitude: number}
 
    
 }

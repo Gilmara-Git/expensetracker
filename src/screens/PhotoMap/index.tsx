@@ -1,17 +1,21 @@
-import { useState , useEffect, useLayoutEffect  } from "react";
+import { useState , useEffect, useLayoutEffect , useCallback } from "react";
 import { View, Alert, Image, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { styles } from "./styles";
 import themes from "../../theme/themes";
 import { IconButton } from "@components/IconButton";
 import { Button } from "@components/Button";
+import { Map } from "@components/Map";
+import { ExpIdType } from "@contexts/expensesContext";
+import { LatLng } from 'react-native-maps'
 
 
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { mapStaticPreviewURL } from "@utils/mapStaticPreview";
-import { useNavigation , useRoute, useIsFocused } from '@react-navigation/native';
+import { useNavigation , useRoute  } from '@react-navigation/native';
 import { StackNavProps } from "@routes/app.routes";
+
 
 
 type ImageType = {
@@ -34,27 +38,39 @@ type PhotoMapType = {
 export const PhotoMap = () => {
   const [cameraPermission, requestPermission] = ImagePicker.useCameraPermissions();
   const [receiptImage, setReceiptImage] = useState<ImageType>({} as ImageType);
-  const [location, setLocation] = useState<LocationType>({} as LocationType);
-  const [ receiptMapInfo, setReceiptMapInfo ] = useState<PhotoMapType>();
+  const [defaultLocation, setDefaultLocation] = useState<LatLng>({} as LatLng);
+  const [pickedLocation, setPickedLocation] = useState<LatLng>({} as LatLng);
+
+  const [ workOnMap, setWorkOnMap ] = useState(false);
+  const [receiptMapInfo, setReceiptMapInfo ] = useState<PhotoMapType>({}as PhotoMapType);
   const [errorMsg, setErrorMsg] = useState({});
 
-  const [ expenseID, setExpenseID] = useState('');
+  const route = useRoute();
+  const { id} = route.params as ExpIdType;
+
 
   const navigation = useNavigation<StackNavProps>();
-  const route = useRoute();
-  const { params } = route as any;
-  console.log(receiptMapInfo, '46')
 
 
-  const isFocused = useIsFocused();
 
-  const handleSubmitReceiptMap = ()=>{
-    console.log('receipt and Map')
-    //validar se tem image e map, se não tiver por um alert se quer continuar sem salvar or quer tirar a photo e pegar o maap
+  // se tiver dependencia quando terminar de criar a funcao, colocar a dependecia na useCallback()
+  const handleSubmitReceiptAndMap = useCallback(()=>{
 
-// saber se tem os componentes de receiptMapInfo
+   if(!receiptImage.uri ){
+    return Alert.alert('No receipt found','Upload your receipt')
+   }
+   if(!pickedLocation.latitude || !pickedLocation.longitude){
 
-  }
+    return Alert.alert('Select the Vendor location on the map.','Select your location.')
+   }
+      
+   //console.log('pronto para salvar no SQLite')
+   console.log(receiptMapInfo)
+ 
+
+  },[pickedLocation, receiptImage, workOnMap])
+
+
   const requestPermissionIOSNeedsCameraPermissions = async () => {
     // check if there is no permission and if it is not granted
 
@@ -105,17 +121,19 @@ export const PhotoMap = () => {
   };
 
   const handleMapView = ()=>{
+
+    setWorkOnMap(true);
    
-    navigation.navigate('mapViewScreen', {id: expenseID, latitude: location.lat, longitude: location.long})
+    // navigation.navigate('mapViewScreen', {latitude: defaultLocation.lat, longitude: defaultLocation.long})
 
   };
 
 
   const handleLocation = async () => {
 
-    if(!receiptImage.uri){
-      Alert.alert('No Image yet!!','Please take a picture of your receipt first.')
-    }
+    // if(!receiptImage.uri){
+    //   Alert.alert('No Image yet!!','Please take a picture of your receipt first.')
+    // }
 
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -130,44 +148,67 @@ export const PhotoMap = () => {
     // user location returns by default lat and lon from California atitude": 37.785834, "longitude": -122.406417
     // console.log(userLocation, 'userLocation')
     
-    setLocation({
-      lat: userLocation.coords.latitude,
-      long: userLocation.coords.longitude,
+    setDefaultLocation({
+      latitude: userLocation.coords.latitude,
+      longitude: userLocation.coords.longitude,
     });
   };
 
+const updatePickedLocation = (pickedLocation: LatLng)=>{
+  setPickedLocation(pickedLocation)
+}
+
+const closeMap = ()=>{
+  setWorkOnMap(false)
+}
+
 useEffect(()=>{
-  if(params.lat && params.long && isFocused){
-    setLocation({ lat: params.lat, long: params.long})
+
+
+  if(pickedLocation.latitude && pickedLocation.longitude){
+    setWorkOnMap(false);
+    setDefaultLocation(pickedLocation)
+   
   }
 
 
   setReceiptMapInfo({
-    expenseId: expenseID,
-    lat: location.lat,
-    long: location.long,
+    expenseId: id,
+    lat: pickedLocation.latitude,
+    long: pickedLocation.longitude,
     imageURL: receiptImage.uri
   })
  
-},[isFocused]);
+},[pickedLocation]);
 
-useEffect(()=>{
-  setExpenseID(params.id.id)
-},[])
+
 
 useLayoutEffect(()=>{
   navigation.setOptions({
     headerRight: ({tintColor})=>(
-      <IconButton iconName='save' size={16} color={tintColor} onPress={handleSubmitReceiptMap}/>
+      <IconButton iconName='save' size={16} color={tintColor} onPress={handleSubmitReceiptAndMap}/>
     )
 
     
   })
    
-},[])
+},[navigation, handleSubmitReceiptAndMap])
 
   return (
     <LinearGradient colors={["#f2edf3", "#c199ea"]} style={styles.background}>
+      {
+        workOnMap  ? 
+     
+          <Map 
+            lat={defaultLocation.latitude} 
+            long={defaultLocation.longitude}
+            getPickedLocation={updatePickedLocation} 
+            workingOnMap={closeMap} 
+            />
+        
+    
+      :
+    <>
       <View style={styles.photo}>
         <View style={styles.wrappingContainer}>
           <View style={styles.innerWrapper}>
@@ -208,12 +249,12 @@ useLayoutEffect(()=>{
       <View style={styles.map}>
         <View style={styles.wrappingContainer}>
           <View style={styles.innerWrapper}>
-            {location.lat ? (
+            {defaultLocation.latitude ? (
               <View style={styles.imagePreview}>
                 <Image
                   style={styles.imageTaken}
                   source={{
-                    uri: mapStaticPreviewURL(location.lat, location.long),
+                    uri: mapStaticPreviewURL(defaultLocation.latitude, defaultLocation.longitude),
                   }}
                 />
               
@@ -223,16 +264,9 @@ useLayoutEffect(()=>{
                       style={styles.mapButton}
                       onPress={handleMapView}
                       title='Pick Location'
-                      // icon={
-                      //   <IconButton
-                      //   disabled
-                      //   iconName="location-arrow"
-                      //   size={40}
-                      //   color={themes.colors.warn}
-                      //   />
-                      // }
+                     
                       />  
-                      {/* <Text style={{color: themes.colors.warn, fontFamily: themes.fonts.balsamiq_700}}>Set Location</Text> */}
+                      
                   </View>
                   
               </View>
@@ -251,6 +285,9 @@ useLayoutEffect(()=>{
           </View>
         </View>
       </View>
+    </>
+    }
+     
     </LinearGradient>
   );
 };

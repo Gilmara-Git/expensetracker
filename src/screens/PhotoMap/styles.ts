@@ -66,8 +66,6 @@ export const styles = StyleSheet.create({
       right: 10 
     },
     mapContainer:{
-      // width: '100%',
-      // height: '100%',
       position: 'absolute',
       backgroundColor: '#6600000',
       alignItems: 'center',
@@ -76,7 +74,10 @@ export const styles = StyleSheet.create({
       right: 10,
     },
     mapButton:{
-    
+    backgroundColor: themes.colors.yellow_1,
+    borderRadius: 8, 
+    padding: 2,
+   
   
     },
     mapContainerParams:{
@@ -90,6 +91,11 @@ export const styles = StyleSheet.create({
     iconTitle: {
       fontFamily: themes.fonts.balsamiq_400, 
       fontSize: 12 , 
-      color: themes.colors.purple_1}
+      color: themes.colors.purple_1
+    },
+    workOnMap:{
+      flex: 1,
+    
+    }
       
 });
