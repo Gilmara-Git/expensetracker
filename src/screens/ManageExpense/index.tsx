@@ -101,8 +101,8 @@ export const ManageExpense = () => {
           error.config
         );
 
-        setIsSubmitting(false);
       }
+      setIsSubmitting(false);
     }
   };
 
