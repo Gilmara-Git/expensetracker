@@ -43,7 +43,7 @@ userBackend.registerInterceptTokenManager = (signOut) => {
       return response;
     },
     async (requestError) => {
-      console.log('There is a request errorooooooooo', requestError.response.status)
+      // console.log('Error status on authenticateUser', requestError.response.status)
       if (
         requestError.response.status === 400  || requestError.response.status === undefined &&
         requestError.response.data.error.message === "INVALID_LOGIN_CREDENTIALS"
@@ -60,8 +60,8 @@ userBackend.registerInterceptTokenManager = (signOut) => {
       }
 
       if (requestError?.response?.status === 401) {
-        console.log(requestError.response.data.status, '====================>>>>>>STATUSSSSSS')
-        console.log(requestError.response.data.message,'linha64 na authenticateUser') 
+        console.log(requestError.response.data.status, 'Error on authenticateUser')
+        console.log(requestError.response.data.message,'Error on authenticateUser') 
         // if (
         //   requestError.response.data.message === "INVALID_CUSTOM_TOKEN" ||
         //   requestError.response.data.message === "TOKEN_EXPIRED" ||
@@ -70,7 +70,7 @@ userBackend.registerInterceptTokenManager = (signOut) => {
         // ) {
           const { refresh_token } = await getTokenStorage();
 
-          console.log('REFRESH TOKENNNNNNNNNNNNNNN  AUTHENTICATEUSER', refresh_token)
+          console.log('REFRESH TOKEN authenticateUser', refresh_token)
         
           if (!refresh_token) {
             signOut();
@@ -83,7 +83,7 @@ userBackend.registerInterceptTokenManager = (signOut) => {
 
           if (isRefreshingToken) {
             const agora =  new Date()
-            console.log('SOU O TOKEN SENDO REFRESHED',  agora.getDate(), agora.getHours(), agora.getMinutes(), 'linha81')
+            console.log('Refresh_token on authenticatedUser',  agora.getDate(), agora.getHours(), agora.getMinutes(),)
             return new Promise((resolve, reject) => {
               requestsQueue.push({
                 onSuccess: (token: string) => {
@@ -115,8 +115,8 @@ userBackend.registerInterceptTokenManager = (signOut) => {
                 }
               );
               const agora =  new Date()
-              console.log('SOU O TOKEN SENDO REFRESHED',  agora.getDate(), agora.getHours(), agora.getMinutes(), 'linha112')
-              console.log('SOU O DATA COM O A RESPOSTA PARA CONSEGUIR NOVO TOLEN, LINHA 114', data)
+              console.log('Refresh_token on authenticatedUser',  agora.getDate(), agora.getHours(), agora.getMinutes())
+              console.log('Data on authenticatedUser', data)
               
               await setTokenStorage(data.idToken, data.refresh_token);
 

@@ -24,6 +24,7 @@ export const Map =({lat, long, getPickedLocation , workingOnMap }:MapTypeProps)=
     }
 
     const onMapPresHandler = (event: MapPressEvent)=>{
+     
         setSelectedCoords({latitude: event.nativeEvent.coordinate.latitude, longitude: event.nativeEvent.coordinate.longitude}) 
         
     }
