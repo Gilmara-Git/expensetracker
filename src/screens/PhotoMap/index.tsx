@@ -15,6 +15,7 @@ import * as Location from "expo-location";
 import { mapStaticPreviewURL } from "@utils/mapStaticPreview";
 import { useNavigation , useRoute  } from '@react-navigation/native';
 import { StackNavProps } from "@routes/app.routes";
+import { getAddressReverseCode } from '@utils/getAddressReverseCode';
 
 
 
@@ -28,11 +29,12 @@ export type LocationType = {
   long: number;
 };
 
-type PhotoMapType = {
+type ReceiptPhotoMapType = {
   expenseId: string
   lat: number
   long: number
   imageURL: string
+  address: string | null
 }
 
 export const PhotoMap = () => {
@@ -40,9 +42,10 @@ export const PhotoMap = () => {
   const [receiptImage, setReceiptImage] = useState<ImageType>({} as ImageType);
   const [defaultLocation, setDefaultLocation] = useState<LatLng>({} as LatLng);
   const [pickedLocation, setPickedLocation] = useState<LatLng>({} as LatLng);
+  const [reversedAddress, setReversedAddress ] = useState('');
 
   const [ workOnMap, setWorkOnMap ] = useState(false);
-  const [receiptMapInfo, setReceiptMapInfo ] = useState<PhotoMapType>({}as PhotoMapType);
+  const [receiptMapInfo, setReceiptMapInfo ] = useState<ReceiptPhotoMapType>({}as ReceiptPhotoMapType);
   const [errorMsg, setErrorMsg] = useState({});
 
   const route = useRoute();
@@ -55,18 +58,18 @@ export const PhotoMap = () => {
 
   // se tiver dependencia quando terminar de criar a funcao, colocar a dependecia na useCallback()
   const handleSubmitReceiptAndMap = useCallback(()=>{
-
-   if(!receiptImage.uri ){
-    return Alert.alert('No receipt found','Upload your receipt')
-   }
-   if(!pickedLocation.latitude || !pickedLocation.longitude){
-
-    return Alert.alert('Select the Vendor location on the map.','Select your location.')
-   }
+     
+    if(!receiptImage.uri ){
+      return Alert.alert('No receipt found','Upload your receipt')
+    }
+    if(!pickedLocation.latitude || !pickedLocation.longitude){
       
-   //console.log('pronto para salvar no SQLite')
-   console.log(receiptMapInfo)
- 
+      return Alert.alert('Select the Vendor location on the map.','Select your location.')
+    }
+    
+
+    console.log(receiptMapInfo, 'linha68 ')
+    
 
   },[pickedLocation, receiptImage, workOnMap])
 
@@ -155,6 +158,7 @@ export const PhotoMap = () => {
   };
 
 const updatePickedLocation = (pickedLocation: LatLng)=>{
+console.log(pickedLocation, 'update')
   setPickedLocation(pickedLocation)
 }
 
@@ -162,8 +166,16 @@ const closeMap = ()=>{
   setWorkOnMap(false)
 }
 
-useEffect(()=>{
+// const getAddress = async ()=>{
+//  const address =  await getAddressReverseCode(pickedLocation.latitude, pickedLocation.longitude);
 
+
+//   const receiptMapLocation =  receiptMapInfo;
+//   const updateMapLocation = {...receiptMapLocation, address}
+//   console.log(updateMapLocation, '175')
+
+// }
+useEffect(()=>{
 
   if(pickedLocation.latitude && pickedLocation.longitude){
     setWorkOnMap(false);
@@ -171,14 +183,19 @@ useEffect(()=>{
    
   }
 
-
+  getAddressReverseCode(pickedLocation.latitude, pickedLocation.longitude).then((response)=>{
+    setReversedAddress(response)
+  });
+  
   setReceiptMapInfo({
     expenseId: id,
     lat: pickedLocation.latitude,
     long: pickedLocation.longitude,
-    imageURL: receiptImage.uri
+    imageURL: receiptImage.uri,
+    address: reversedAddress
   })
- 
+
+
 },[pickedLocation]);
 
 
