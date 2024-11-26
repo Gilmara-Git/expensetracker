@@ -40,12 +40,14 @@ export const styles = StyleSheet.create(
         title:{
             fontFamily: themes.fonts.balsamiq_700,
             textAlign: 'center',
-            fontSize: 14
+            fontSize: 14,
+            color: themes.colors.purple_1
         },
         category:{
             fontFamily: themes.fonts.balsamiq_400, 
             textAlign: 'center',
-            fontSize: 12
+            fontSize: 12,
+            color: themes.colors.purple_1
         },
         itemsContainerTop:{
             flexDirection: 'row',
@@ -66,6 +68,13 @@ export const styles = StyleSheet.create(
         },
         pressed:{
             opacity: .75
+        },
+        vendor: {
+            fontFamily: themes.fonts.balsamiq_400,
+            color: themes.colors.purple_1,
+            fontSize: 14,
+            marginTop: 5
+
         }
 
     }
