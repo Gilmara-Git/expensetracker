@@ -35,12 +35,15 @@ export const ManageExpense = () => {
   const isEditing = expId.id !== "addExpense";
 
   const handleConfirm = async (fields: FormData) => {
+   
     const expense = {
       description: fields.description,
       amount: Number(fields.amount),
       date: new Date(fields.date),
       category: fields.category,
+      vendor_name: fields.vendor_name,
     };
+
 
     if (isEditing) {
       setIsSubmitting(true);
