@@ -36,7 +36,8 @@ export const getExpensesFromDB = async()=>{
                 amount: response.data[key].amount,
                 description: response.data[key].description,
                 category: response.data[key].category,
-                date: new Date(response.data[key].date)
+                date: new Date(response.data[key].date),
+                vendor_name: response.data[key].vendor_name
             }
            
             expenses.push(ObjExpense)

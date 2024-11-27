@@ -26,6 +26,7 @@ export const ExpensesOutput = ({ data }: ExpensesOutputProps) => {
             date={dateFormat(item.date)}
             iconSize={18}
             id={item.id}
+            vendor_name={item.vendor_name}
           />
         )}
         ListEmptyComponent={()=>

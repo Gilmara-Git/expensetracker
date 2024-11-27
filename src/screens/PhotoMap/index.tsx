@@ -15,7 +15,8 @@ import * as Location from "expo-location";
 import { mapStaticPreviewURL } from "@utils/mapStaticPreview";
 import { useNavigation , useRoute  } from '@react-navigation/native';
 import { StackNavProps } from "@routes/app.routes";
-
+import { getAddressReverseCode } from '@utils/getAddressReverseCode';
+import { useVendorDatabase } from "@services/sqlite_database_on_device/useVendorDatabase";
 
 
 type ImageType = {
@@ -28,11 +29,13 @@ export type LocationType = {
   long: number;
 };
 
-type PhotoMapType = {
+type ReceiptPhotoMapType = {
   expenseId: string
+  address: string, 
   lat: number
   long: number
   imageURL: string
+
 }
 
 export const PhotoMap = () => {
@@ -40,35 +43,128 @@ export const PhotoMap = () => {
   const [receiptImage, setReceiptImage] = useState<ImageType>({} as ImageType);
   const [defaultLocation, setDefaultLocation] = useState<LatLng>({} as LatLng);
   const [pickedLocation, setPickedLocation] = useState<LatLng>({} as LatLng);
+  const [reversedAddress, setReversedAddress ] = useState('');
 
-  const [ workOnMap, setWorkOnMap ] = useState(false);
-  const [receiptMapInfo, setReceiptMapInfo ] = useState<PhotoMapType>({}as PhotoMapType);
+  const [workOnMap, setWorkOnMap ] = useState(false);
+  const [receiptMapInfo, setReceiptMapInfo ] = useState<ReceiptPhotoMapType>({}as ReceiptPhotoMapType);
   const [errorMsg, setErrorMsg] = useState({});
 
   const route = useRoute();
   const { id} = route.params as ExpIdType;
 
-
   const navigation = useNavigation<StackNavProps>();
 
+  const vendor = useVendorDatabase();
+  
 
+  const receiptMapExists =  async()=>{
+
+
+    try{
+      const response =  await vendor.searchReceiptMapByExpenseId(id);
+
+   
+      if(response.length > 0){
+        const latestReceiptMap: any  = response.pop();
+        const lastWithAddress : any = response.reverse().find((item:any)=>{
+          if(item.address !== null){
+            return item
+
+          }
+        })
+
+        
+       
+        for(let item in lastWithAddress){
+          if(item === 'address'){
+            setReversedAddress(lastWithAddress[item])
+          }
+
+         
+          if(item === 'imageURL'){
+           const currentImage =  receiptImage;
+           const updatedImage = { ...currentImage, uri: lastWithAddress[item]}
+           setReceiptImage(updatedImage);
+          }
+
+          if(item === 'lat'){
+            const currentDefaultLocation =  defaultLocation; 
+            const updatedDefaultLocation = { ...currentDefaultLocation, lat: lastWithAddress[item] }
+            setDefaultLocation(updatedDefaultLocation);
+
+          }
+
+          if(item === 'long'){
+            const currentDefaultLocation =  defaultLocation; 
+            const updatedDefaultLocation = { ...currentDefaultLocation, long: lastWithAddress[item] }
+            setDefaultLocation(updatedDefaultLocation);
+
+          }
+
+        }
+
+      }
+    
+
+    }catch(error){
+      throw error;
+
+    }
+  }
+
+
+const saveVendor = async(receiptMapInfoData: ReceiptPhotoMapType)=>{
+  // if(reversedAddress === null || reversedAddress === undefined){
+  //   Alert.alert('Pick location','Please use the map to pick a location!')
+  // }
+
+
+ 
+  const recordId =  await vendor.create(receiptMapInfoData)
+  // return recordId.insertedRowId
+
+}
 
   // se tiver dependencia quando terminar de criar a funcao, colocar a dependecia na useCallback()
-  const handleSubmitReceiptAndMap = useCallback(()=>{
+  const handleSubmitReceiptAndMap = useCallback(async()=>{
+     
 
-   if(!receiptImage.uri ){
-    return Alert.alert('No receipt found','Upload your receipt')
-   }
-   if(!pickedLocation.latitude || !pickedLocation.longitude){
-
-    return Alert.alert('Select the Vendor location on the map.','Select your location.')
-   }
+    if(!receiptImage.uri ){
+      return Alert.alert('No receipt found','Upload your receipt')
+    }
+    if(!pickedLocation.latitude || !pickedLocation.longitude){
       
-   //console.log('pronto para salvar no SQLite')
-   console.log(receiptMapInfo)
- 
+      return Alert.alert('Select the Vendor location on the map.','Select your location.')
+    }
 
-  },[pickedLocation, receiptImage, workOnMap])
+    if(!reversedAddress){
+     
+      getAddressReverseCode(defaultLocation.latitude, defaultLocation.longitude).then((response)=>{
+        setReversedAddress(response)
+      
+
+        const currentReceiptMap = receiptMapInfo;
+        const updatedReceiptMap  = { ...currentReceiptMap, address: response };
+        setReceiptMapInfo(updatedReceiptMap)
+      });
+
+    }
+ 
+    try{
+
+
+      await saveVendor(receiptMapInfo)
+      navigation.goBack();
+     
+
+    }catch(error){
+      console.log(error)
+      Alert.alert('An error occurred', 'Try again later') 
+    }
+
+    
+
+  },[pickedLocation, receiptImage, workOnMap, receiptMapInfo])
 
 
   const requestPermissionIOSNeedsCameraPermissions = async () => {
@@ -112,7 +208,7 @@ export const PhotoMap = () => {
       cameraType: ImagePicker.CameraType.back,
     });
     if (receipt.assets) {
-      setReceiptImage({
+        setReceiptImage({
         uri: receipt.assets[0].uri,
         fileName: receipt.assets[0].fileName,
       });
@@ -134,6 +230,11 @@ export const PhotoMap = () => {
     // if(!receiptImage.uri){
     //   Alert.alert('No Image yet!!','Please take a picture of your receipt first.')
     // }
+    // se nao tiver default location prosseguir
+
+    if(defaultLocation.latitude && defaultLocation.longitude){
+      return
+    }
 
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -145,8 +246,8 @@ export const PhotoMap = () => {
       accuracy: Location.Accuracy.Balanced,
       
     });
-    // user location returns by default lat and lon from California atitude": 37.785834, "longitude": -122.406417
-    // console.log(userLocation, 'userLocation')
+   
+    
     
     setDefaultLocation({
       latitude: userLocation.coords.latitude,
@@ -155,15 +256,19 @@ export const PhotoMap = () => {
   };
 
 const updatePickedLocation = (pickedLocation: LatLng)=>{
+
   setPickedLocation(pickedLocation)
+  getAddressReverseCode(pickedLocation.latitude,pickedLocation.longitude).then((response)=>{
+    setReversedAddress(response)
+  })
 }
 
 const closeMap = ()=>{
   setWorkOnMap(false)
 }
 
-useEffect(()=>{
 
+useEffect(()=>{
 
   if(pickedLocation.latitude && pickedLocation.longitude){
     setWorkOnMap(false);
@@ -171,14 +276,19 @@ useEffect(()=>{
    
   }
 
-
+  getAddressReverseCode(pickedLocation.latitude, pickedLocation.longitude).then((response)=>{
+    setReversedAddress(response)
+  });
+  
   setReceiptMapInfo({
     expenseId: id,
     lat: pickedLocation.latitude,
     long: pickedLocation.longitude,
-    imageURL: receiptImage.uri
+    imageURL: receiptImage.uri,
+    address: reversedAddress
   })
- 
+
+
 },[pickedLocation]);
 
 
@@ -193,6 +303,19 @@ useLayoutEffect(()=>{
   })
    
 },[navigation, handleSubmitReceiptAndMap])
+
+
+// useEffect(()=>{
+
+//   list();
+
+
+// }, [receiptMapSaved])
+
+useEffect(()=>{
+ 
+  receiptMapExists()
+},[defaultLocation])
 
   return (
     <LinearGradient colors={["#f2edf3", "#c199ea"]} style={styles.background}>

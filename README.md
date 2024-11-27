@@ -48,13 +48,15 @@
 - Async Storage
 - React Navigation
 - Axios
+- Zod
+- React Hook form
 - React Native Toast Message
 - React Native community datetimepicker
 - React Native dropdown select list
-- React Hook form
-- Zod
-- Firebase Realtime Database
+- React Native Maps
 - Google Maps Static API
+- Firebase Realtime Database
+- Expo sqlite
 
 
 

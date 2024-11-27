@@ -16,6 +16,7 @@ export type expenseType = {
     amount: number, 
     date: Date,
     category: string
+    vendor_name: string
 }
 
 export const ExpensesCtx = createContext({

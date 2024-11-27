@@ -24,6 +24,7 @@ export type FormData = {
   description: string;
   date: string;
   category: string;
+  vendor_name: string;
 };
 
 const selectListData = [
@@ -90,6 +91,7 @@ export const InputForm = ({
       amount: isEditing && expToEdit ? expToEdit.amount.toFixed(2) : "",
       description: isEditing && expToEdit ? expToEdit.description : "",
       date: isEditing && expToEdit ? dateFormat(expToEdit.date) : "",
+      vendor_name: isEditing && expToEdit ? expToEdit.vendor_name : ''
     },
   });
 
@@ -122,7 +124,7 @@ export const InputForm = ({
     }
 
     fields.date = date.toDateString();
-   
+  
 
     onConfirm(fields);
   };
@@ -143,7 +145,27 @@ export const InputForm = ({
           />
         </View>
 
+
         <View style={styles.group}>
+          <View style={{minWidth: '40%'}}>
+            <Controller
+              control={control}
+              rules={{ required: "Type Vendor name" }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  label="Vendor name"
+                  placeholder="Vendor name"
+                  onChangeText={onChange}
+                  value={value}
+                  onBlur={onBlur}
+                  multiline={false}
+                  errorMessage={errors.amount?.message}
+                />
+              )}
+              name="vendor_name"
+            />
+          </View>
+
           <View style={{minWidth: '40%'}}>
             <Controller
               control={control}
@@ -208,6 +230,8 @@ export const InputForm = ({
 
        </View>
         </View>
+
+       
 
         <SelectList
           defaultOption={{

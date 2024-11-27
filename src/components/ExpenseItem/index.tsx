@@ -12,6 +12,7 @@ type ExpenseItemProps = {
   date: string;
   iconSize: number;
   id: string;
+  vendor_name: string
 };
 
 export const ExpenseItem = ({
@@ -21,6 +22,8 @@ export const ExpenseItem = ({
   date,
   iconSize,
   id,
+  vendor_name
+
 }: ExpenseItemProps) => {
   const navigation = useNavigation<StackNavProps>();
 
@@ -40,8 +43,10 @@ export const ExpenseItem = ({
             style={styles.background}
           >
             <View style={styles.itemContainer}>
-              <IconContainer iconSize={iconSize} category={category} />
-
+              <View>
+                <IconContainer iconSize={iconSize} category={category} />
+                <Text style={styles.vendor}>{vendor_name}</Text>
+              </View>
               <View>
                 <View style={styles.itemsContainerTop}>
                   <View>
