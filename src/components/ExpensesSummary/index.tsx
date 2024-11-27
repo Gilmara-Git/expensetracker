@@ -7,6 +7,7 @@ export type ExpensesList = {
   amount: number;
   date: Date;
   category: string;
+  vendor_name: string
 }[];
 
 export type ExpensesProps = {
